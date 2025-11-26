@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>(주)영선기계 통합 관리 시스템 v2.7 (Fixed)</title>
+  
+  <meta name="theme-color" content="#4A90E2">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2920/2920323.png">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --surface-color: #1e1e1e;
+      --border-color: #333;
+      --primary-color: #4A90E2;
+      --primary-hover: #357ABD;
+      --text-color: #e0e0e0;
+      --text-muted: #a0a0a0;
+      --danger-color: #cf6679;
+      --accent-color: #03dac6;
+      --success-color: #00e676;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2, h3 { margin-top: 0; color: #fff; }
+
+    /* 레이아웃 & 탭 */
+    .container { max-width: 1400px; margin: 0 auto; }
+    
+    .tab-nav {
+      display: flex; gap: 10px; margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: var(--surface-color); border: 1px solid var(--border-color);
+      color: var(--text-muted); padding: 10px 20px; cursor: pointer;
+      border-radius: 8px; font-weight: bold; transition: all 0.2s;
+    }
+    .tab-btn:hover { background: #333; color: #fff; }
+    .tab-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+
+    .tab-content { display: none; animation: fadeIn 0.3s; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* 카드 & 폼 */
+    .card {
+      background: var(--surface-color); border-radius: 12px; padding: 20px;
+      margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    input[type="text"], input[type="date"], select {
+      background: #2c2c2c; border: 1px solid #444; color: #fff;
+      padding: 8px 12px; margin: 4px; border-radius: 4px; font-size: 14px;
+    }
+    input:focus, select:focus { outline: 2px solid var(--primary-color); border-color: transparent; }
+
+    /* 체크박스 스타일 커스텀 */
+    input[type="checkbox"] {
+        accent-color: var(--primary-color);
+        width: 16px; height: 16px; cursor: pointer;
+        vertical-align: middle;
+    }
+    .status-label {
+        display: inline-flex; align-items: center; gap: 5px; 
+        margin-right: 8px; cursor: pointer; font-size: 0.9em;
+        padding: 2px 6px; border-radius: 4px; transition: background 0.2s;
+    }
+    .status-label:hover { background: #333; }
+    .status-checked { color: var(--success-color); font-weight: bold; }
+
+    button {
+      background: #333; color: #fff; border: 1px solid #555;
+      padding: 8px 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s;
+    }
+    button:hover { background: #444; }
+    .btn-primary { background: var(--primary-color); border-color: var(--primary-color); }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-danger { background: var(--danger-color); border-color: var(--danger-color); color: #000; }
+    
+    /* 테이블 */
+    .table-container { overflow-x: auto; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; } /* 수직 정렬 중앙 */
+    th { background: #252525; color: var(--text-muted); font-weight: 600; }
+    tr:hover { background: #2a2a2a; }
+
+    /* 긴 텍스트 말줄임 처리 (새로 추가됨) */
+    .ellipsis-cell {
+        max-width: 180px;      /* 최대 너비 제한 */
+        white-space: nowrap;   /* 줄바꿈 금지 */
+        overflow: hidden;      /* 넘치는 텍스트 숨김 */
+        text-overflow: ellipsis; /* 말줄임표(...) 표시 */
+        display: block;        /* 블록 속성 부여하여 너비 제한 적용 */
+        border-bottom: none !important; /* 내부 display block으로 인한 보더 겹침 방지 */
+    }
+    /* 테이블 셀 너비 강제 조정을 위한 보조 스타일 */
+    td:has(.ellipsis-cell) {
+        max-width: 180px;
+    }
+
+    /* 유틸리티 */
+    .flex-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+    .text-red { color: #ff6b6b; font-weight: bold; }
+    .paginator { margin-top: 15px; display: flex; justify-content: center; gap: 4px; }
+    .paginator button.active { background: var(--primary-color); border-color: var(--primary-color); }
+    .link-text { color: var(--accent-color); text-decoration: underline; cursor: pointer; }
+
+    /* 모달 */
+    .modal {
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
+      align-items: center; justify-content: center;
+    }
+    .modal.show { display: flex; }
+    .modal-content {
+      background-color: var(--surface-color); padding: 25px; border-radius: 12px;
+      width: 90%; max-width: 800px; max-height: 90vh;
+      border: 1px solid #444; display: flex; flex-direction: column; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+    .modal-body { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+    .modal-footer { margin-top: 15px; padding-top: 10px; border-top: 1px solid #333; display: flex; justify-content: flex-end; gap: 10px; }
+    .close-modal { font-size: 24px; cursor: pointer; color: #aaa; }
+    .close-modal:hover { color: #fff; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { margin-bottom: 5px; color: var(--text-muted); font-size: 0.9em; }
+    .form-group input { width: 100%; box-sizing: border-box; margin: 0; }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2>🛠️ (주)영선기계 통합 관리 시스템</h2>
+    <span style="color:var(--text-muted); font-size:0.9em;">Last Updated: <span id="currentDateDisplay"></span></span>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('schedule')">📅 일정관리</button>
+    <button class="tab-btn" onclick="switchTab('phonebook')">📞 전화번호부</button>
+    <button class="tab-btn" onclick="switchTab('bucket')">🪣 버켓주기</button>
+    <button class="tab-btn" onclick="switchTab('equipment')">📄 설비관리</button>
+    <button class="tab-btn" onclick="switchTab('order')">📦 발주정보</button>
+  </div>
+
+  <div id="schedule" class="tab-content active">
+    <div class="card">
+      <h3>일정 등록</h3>
+      <form id="scheduleForm" class="flex-row">
+        <input type="date" name="날짜" required />
+        <input type="text" name="생산팀" placeholder="생산팀" required />
+        <input type="text" name="작업내용" placeholder="작업내용" required />
+        <input type="text" name="담당자" placeholder="담당자" required />
+        <input type="text" name="발주번호" placeholder="발주번호" required />
+        <input type="text" name="필수자재" placeholder="필수자재" />
+        <input type="text" name="허가번호" placeholder="허가번호" />
+        <input type="text" name="비고" placeholder="비고" />
+        <button type="submit" class="btn-primary">추가</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="flex-row" style="justify-content: space-between;">
+        <div class="flex-row">
+          <input type="text" id="searchBox" placeholder="🔍 통합 검색..." style="width: 200px;" />
+          <select id="sortKeySel">
+            <option value="날짜">날짜순</option>
+            <option value="생산팀">생산팀순</option>
+            <option value="작업내용">작업내용순</option>
+          </select>
+          <button id="ascBtn">오름차순</button>
+          <button id="descBtn">내림차순</button>
+        </div>
+        <div class="flex-row">
+          <input type="date" id="startDate"> ~ <input type="date" id="endDate">
+          <button id="filterBtn">기간 조회</button>
+          <button id="clearFilterBtn">초기화</button>
+          <button id="summaryBtn" class="btn-primary" style="background:#2d8cf0;">📊 차트 요약</button>
+        </div>
+      </div>
+      <div id="chartContainer" style="display:none; margin: 20px 0; height:300px;">
+        <canvas id="scheduleChart"></canvas>
+      </div>
+      <div class="table-container">
+        <table id="scheduleTable">
+          <thead><tr><th>날짜</th><th>생산팀</th><th>작업내용</th><th>담당자</th><th>발주번호</th><th>필수자재</th><th>허가번호</th><th>비고</th><th>관리</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="pagination" class="paginator"></div>
+    </div>
+  </div>
+
+  <div id="phonebook" class="tab-content">
+    <div class="card">
+      <h3>연락처 등록</h3>
+      <div class="flex-row">
+        <input type="text" id="pbDept" placeholder="부서">
+        <input type="text" id="pbPosition" placeholder="직책">
+        <input type="text" id="pbName" placeholder="이름">
+        <input type="text" id="pbPhone" placeholder="전화번호">
+        <button onclick="savePhonebook()" class="btn-primary">저장</button>
+      </div>
+    </div>
+    <div class="card">
+      <input type="text" id="pbSearch" placeholder="🔍 이름/부서 검색" style="width:100%; max-width:300px; margin-bottom:10px;">
+      <div class="table-container">
+        <table id="pbTable">
+          <thead><tr><th>부서</th><th>직책</th><th>이름</th><th>전화번호</th><th>관리</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="pbPagination" class="paginator"></div>
+    </div>
+  </div>
+
+  <div id="bucket" class="tab-content">
+    <div class="card">
+      <h3>버켓 교체 기록</h3>
+      <div class="flex-row">
+        <input type="text" id="bkDept" placeholder="부서/호기">
+        <input type="date" id="bkDate">
+        <input type="text" id="bkNote" placeholder="비고">
+        <button onclick="saveBucket()" class="btn-primary">저장</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="flex-row">
+        <input type="text" id="bkSearch" placeholder="🔍 검색">
+        <button id="bkAscBtn">날짜 오름차순</button>
+        <button id="bkDescBtn">날짜 내림차순</button>
+      </div>
+      <div class="table-container">
+        <table id="bkTable">
+          <thead><tr><th>부서/호기</th><th>교체 날짜</th><th>경과 시간</th><th>비고</th><th>관리</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="bkPagination" class="paginator"></div>
+    </div>
+  </div>
+
+  <div id="equipment" class="tab-content">
+    <div class="card">
+      <h3>설비 스펙 등록</h3>
+      <div class="flex-row">
+        <input type="text" id="esTeam" placeholder="팀 (예: OF1팀)">
+        <input type="text" id="esEqId" placeholder="설비 ID (예: KC-089)">
+        <input type="text" id="esLocation" placeholder="위치 (예: A동 3층)">
+        <button onclick="openSpecModal('new')" class="btn-primary">📝 스펙 상세 입력</button>
+      </div>
+    </div>
+    <div class="card">
+      <input type="text" id="esSearch" placeholder="🔍 팀 / ID / 위치 / 스펙 내용 검색" style="width:100%; padding:10px;">
+      <div class="table-container">
+        <table id="esTable">
+          <thead><tr><th>팀</th><th>설비 ID</th><th>위치</th><th>세부 스펙 (전체)</th><th>관리</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="esPagination" class="paginator"></div>
+    </div>
+  </div>
+
+  <div id="order" class="tab-content">
+    <div class="card">
+      <h3>발주 정보 등록</h3>
+      <div class="flex-row">
+        <input type="text" id="odBid" placeholder="입찰번호">
+        <input type="text" id="odReq" placeholder="의뢰번호">
+        <input type="text" id="odPo" placeholder="구매PO번호">
+        <input type="text" id="odRequester" placeholder="의뢰자">
+        <input type="text" id="odBuyer" placeholder="구매담당자">
+        <input type="text" id="odProject" placeholder="공사명">
+        <input type="text" id="odPermit" placeholder="작업내용">
+        <button onclick="saveOrder()" class="btn-primary">저장</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="flex-row">
+        <input type="text" id="odSearch" placeholder="🔍 PO번호/공사명 검색">
+        <button id="odAscBtn">최신순</button>
+        <button id="odDescBtn">오래된순</button>
+      </div>
+      <div class="table-container">
+        <table id="odTable">
+          <thead><tr><th>입찰번호</th><th>의뢰번호</th><th>구매PO번호</th><th>의뢰자</th><th>구매담당자</th><th>공사명</th><th>작업내용</th><th>진행상태</th><th>관리</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div id="odPagination" class="paginator"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="scheduleModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header"><h3>📅 일정 수정</h3><span class="close-modal" onclick="closeModal('scheduleModal')">&times;</span></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>날짜</label><input type="date" id="m_schDate"></div>
+        <div class="form-group"><label>생산팀</label><input type="text" id="m_schTeam"></div>
+        <div class="form-group"><label>작업내용</label><input type="text" id="m_schWork"></div>
+        <div class="form-group"><label>담당자</label><input type="text" id="m_schManager"></div>
+        <div class="form-group"><label>발주번호</label><input type="text" id="m_schOrderNo"></div>
+        <div class="form-group"><label>필수자재</label><input type="text" id="m_schMat"></div>
+        <div class="form-group"><label>허가번호</label><input type="text" id="m_schPermit"></div>
+        <div class="form-group"><label>비고</label><input type="text" id="m_schNote"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal('scheduleModal')">취소</button><button onclick="saveScheduleFromModal()" class="btn-primary">수정 저장</button></div>
+  </div>
+</div>
+
+<div id="phoneModal" class="modal">
+  <div class="modal-content" style="max-width:500px;">
+    <div class="modal-header"><h3>📞 연락처 수정</h3><span class="close-modal" onclick="closeModal('phoneModal')">&times;</span></div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns: 1fr;">
+        <div class="form-group"><label>부서</label><input type="text" id="m_pbDept"></div>
+        <div class="form-group"><label>직책</label><input type="text" id="m_pbPos"></div>
+        <div class="form-group"><label>이름</label><input type="text" id="m_pbName"></div>
+        <div class="form-group"><label>전화번호</label><input type="text" id="m_pbPhone"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal('phoneModal')">취소</button><button onclick="savePhoneFromModal()" class="btn-primary">수정 저장</button></div>
+  </div>
+</div>
+
+<div id="bucketModal" class="modal">
+  <div class="modal-content" style="max-width:500px;">
+    <div class="modal-header"><h3>🪣 버켓 기록 수정</h3><span class="close-modal" onclick="closeModal('bucketModal')">&times;</span></div>
+    <div class="modal-body">
+      <div class="form-grid" style="grid-template-columns: 1fr;">
+        <div class="form-group"><label>부서/호기</label><input type="text" id="m_bkDept"></div>
+        <div class="form-group"><label>날짜</label><input type="date" id="m_bkDate"></div>
+        <div class="form-group"><label>비고</label><input type="text" id="m_bkNote"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal('bucketModal')">취소</button><button onclick="saveBucketFromModal()" class="btn-primary">수정 저장</button></div>
+  </div>
+</div>
+
+<div id="specModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header"><h3>🔧 설비 상세 스펙 편집</h3><span class="close-modal" onclick="closeModal('specModal')">&times;</span></div>
+    <div class="modal-body">
+      <div id="modalMetaInfo" style="margin-bottom:15px; color:var(--primary-color); font-weight:bold;"></div>
+      <table class="spec-table" id="modalSpecTable" style="width:100%; margin-bottom:15px; border-collapse:collapse;">
+        <thead><tr><th style="width:40%">항목명 (Key)</th><th style="width:40%">값 (Value)</th><th style="width:20%">삭제</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <button onclick="addModalRow()" style="width:100%; border:1px dashed #555;">+ 항목 추가</button>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal('specModal')">취소</button><button onclick="saveSpecFromModal()" class="btn-primary">저장 완료</button></div>
+  </div>
+</div>
+
+<div id="orderModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header"><h3>📦 발주 정보 수정</h3><span class="close-modal" onclick="closeModal('orderModal')">&times;</span></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>입찰번호</label><input type="text" id="m_odBid"></div>
+        <div class="form-group"><label>의뢰번호</label><input type="text" id="m_odReq"></div>
+        <div class="form-group"><label>구매PO번호</label><input type="text" id="m_odPo"></div>
+        <div class="form-group"><label>의뢰자</label><input type="text" id="m_odRequester"></div>
+        <div class="form-group"><label>구매담당자</label><input type="text" id="m_odBuyer"></div>
+        <div class="form-group"><label>공사명</label><input type="text" id="m_odProject"></div>
+        <div class="form-group"><label>작업내용</label><input type="text" id="m_odPermit"></div>
+        <div class="form-group">
+            <label style="color:var(--primary-color); font-weight:bold;">진행 상태 체크</label>
+            <div style="display:flex; gap:15px; padding:10px; background:#2c2c2c; border-radius:4px;">
+                <label><input type="checkbox" id="m_odPermitCheck"> 허가번호 발행됨</label>
+                <label><input type="checkbox" id="m_odDoneCheck"> 작업 완료됨</label>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer"><button onclick="closeModal('orderModal')">취소</button><button onclick="saveOrderFromModal()" class="btn-primary">수정 저장</button></div>
+  </div>
+</div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbwh8AAXw_oWFvM6B0ifjVijLyfmWKmbCmX3yQSSiNlFeFctmMpgIAnE3cfS-GDJocN9iA/exec";
+  const getTodayStr = () => { const d = new Date(); const pad = n => n<10 ? '0'+n : n; return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+  const TODAY_DATE_STR = getTodayStr(); document.getElementById('currentDateDisplay').textContent = TODAY_DATE_STR;
+
+  /* --- Utils --- */
+  function formatDate(v) {
+    if (!v) return "";
+    try { const d = new Date(v); if (isNaN(d.getTime())) return v; const pad = n => n<10 ? '0'+n : n; return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; } catch { return v; }
+  }
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    const buttons = document.querySelectorAll('.tab-btn');
+    const idx = ['schedule','phonebook','bucket','equipment','order'].indexOf(tabId);
+    if(idx>=0) buttons[idx].classList.add('active');
+  }
+
+  function renderPaginator(divId, totalPages, callback, currentPage){
+    const div = document.getElementById(divId); div.innerHTML = ""; if(totalPages < 2) return;
+    let startP = Math.max(1, currentPage - 2); let endP = Math.min(totalPages, startP + 4);
+    for(let i=startP; i<=endP; i++){
+      const b = document.createElement("button"); b.textContent = i; if(i === currentPage) b.classList.add("active");
+      b.onclick = () => callback(i); div.appendChild(b);
+    }
+  }
+
+  /* --- Modal Utils --- */
+  function openModal(id) { document.getElementById(id).classList.add('show'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  let currentSchRow=null, currentPbRow=null, currentBkRow=null, currentOdRow=null;
+
+  /* ================= 1. 일정관리 ================= */
+  const schedulePageSize=10, FIELDS=["날짜","생산팀","작업내용","담당자","발주번호","필수자재","허가번호","비고"];
+  let schedulePage=1, records=[], searchQuery="", sortKey="날짜", sortAsc=true, dateFilter={start:null,end:null};
+  let scheduleChartInstance = null;
+
+  async function loadSchedule(autoJumpToToday = false){
+    try {
+        const res = await fetch(API_URL+"?action=schedule_get"); const raw = await res.json();
+        records = raw.slice(1).map((row,i) => { const o = {row: i+2}; FIELDS.forEach((k,idx) => o[k] = row[idx]??""); return o; });
+        if (autoJumpToToday) {
+            const view = getScheduleView(records); let todayIndex = view.findIndex(r => formatDate(r["날짜"]) === TODAY_DATE_STR);
+            if (todayIndex !== -1) schedulePage = Math.floor(todayIndex / schedulePageSize) + 1;
+        }
+        renderSchedule();
+    } catch(e) { console.error(e); alert("일정 데이터 로드 실패"); }
+  }
+
+  function getScheduleView(data = records){
+    let view = data.filter(r => {
+      if(searchQuery){ const hay = FIELDS.map(k=>r[k]??"").join(" ").toLowerCase(); if(!hay.includes(searchQuery.toLowerCase())) return false; }
+      if(dateFilter.start || dateFilter.end){ const dStr = formatDate(r["날짜"]); if(!dStr) return false; if(dateFilter.start && dStr < dateFilter.start) return false; if(dateFilter.end && dStr > dateFilter.end) return false; }
+      return true;
+    });
+    view.sort((a,b)=>{
+      let A=a[sortKey]??"", B=b[sortKey]??"";
+      if(sortKey==="날짜"){ const da=formatDate(A), db=formatDate(B); return sortAsc ? da.localeCompare(db) : db.localeCompare(da); }
+      return sortAsc ? String(A).localeCompare(String(B),"ko",{numeric:true,sensitivity:"base"}) : String(B).localeCompare(String(A),"ko",{numeric:true,sensitivity:"base"});
+    });
+    return view;
+  }
+
+  function renderSchedule(){
+    const view = getScheduleView(); const totalPages = Math.ceil(view.length/schedulePageSize)||1; if(schedulePage > totalPages) schedulePage=1;
+    const start = (schedulePage-1)*schedulePageSize; const end = start + schedulePageSize;
+    const tb = document.querySelector("#scheduleTable tbody"); tb.innerHTML = "";
+    view.slice(start,end).forEach(r => {
+      const tr = document.createElement("tr");
+      FIELDS.forEach(k => {
+        const td = document.createElement("td"); let val = (k==="날짜" ? formatDate(r[k]) : r[k]);
+        if(k==="날짜" && val===TODAY_DATE_STR) { td.classList.add("text-red"); td.textContent = val; } 
+        else if (k === "발주번호" && val) { td.innerHTML = `<span class="link-text" onclick="searchOrderByPO('${val}')">${val}</span>`; } 
+        else { td.textContent = val; }
+        tr.appendChild(td);
+      });
+      tr.innerHTML += `<td><button onclick="openScheduleModal(${r.row})">✏️</button> <button onclick="deleteRecord(${r.row})" class="btn-danger">🗑️</button></td>`;
+      tb.appendChild(tr);
+    });
+    renderPaginator("pagination", totalPages, (p)=>{schedulePage=p;renderSchedule();}, schedulePage);
+  }
+  
+  // (수정) 일정관리에서 발주 검색
+  function searchOrderByPO(po){ if(!po) return; switchTab('order'); document.getElementById('odSearch').value = po; document.getElementById('odSearch').dispatchEvent(new Event('input')); }
+  
+  // (신규 추가) 발주정보에서 일정관리 검색 (양방향 링크 기능)
+  function searchScheduleByPO(po){
+      if(!po) return;
+      switchTab('schedule'); // 일정관리 탭으로 이동
+      document.getElementById('searchBox').value = po; // 검색창에 PO 입력
+      document.getElementById('searchBox').dispatchEvent(new Event('input')); // 검색 이벤트 실행
+  }
+
+  function openScheduleModal(row){
+      currentSchRow = row; const rec = records.find(r => r.row === row); if(!rec) return;
+      document.getElementById('m_schDate').value = formatDate(rec["날짜"]); document.getElementById('m_schTeam').value = rec["생산팀"];
+      document.getElementById('m_schWork').value = rec["작업내용"]; document.getElementById('m_schManager').value = rec["담당자"];
+      document.getElementById('m_schOrderNo').value = rec["발주번호"]; document.getElementById('m_schMat').value = rec["필수자재"];
+      document.getElementById('m_schPermit').value = rec["허가번호"]; document.getElementById('m_schNote').value = rec["비고"];
+      openModal('scheduleModal');
+  }
+  async function saveScheduleFromModal(){
+      const date=document.getElementById('m_schDate').value, team=document.getElementById('m_schTeam').value, work=document.getElementById('m_schWork').value;
+      const manager=document.getElementById('m_schManager').value, orderNo=document.getElementById('m_schOrderNo').value;
+      const mat=document.getElementById('m_schMat').value, permit=document.getElementById('m_schPermit').value, note=document.getElementById('m_schNote').value;
+      await fetch(API_URL, {method:"POST", body:JSON.stringify({action:"update", row: currentSchRow, "날짜": date, "생산팀": team, "작업내용": work, "담당자": manager, "발주번호": orderNo, "필수자재": mat, "허가번호": permit, "비고": note})});
+      closeModal('scheduleModal'); loadSchedule();
+  }
+  document.getElementById("scheduleForm").addEventListener("submit", async e => {
+    e.preventDefault(); const fd = new FormData(e.target); const payload = {action:"add"}; FIELDS.forEach(k => payload[k] = fd.get(k)||"");
+    await fetch(API_URL, {method:"POST", body:JSON.stringify(payload)}); e.target.reset(); loadSchedule();
+  });
+  async function deleteRecord(row){ if(confirm("삭제?")) { await fetch(API_URL, {method:"POST", body:JSON.stringify({action:"delete", row})}); loadSchedule(); } }
+  document.getElementById("searchBox").addEventListener("input",e=>{searchQuery=e.target.value; schedulePage=1; renderSchedule();});
+  document.getElementById("sortKeySel").addEventListener("change",e=>{sortKey=e.target.value; renderSchedule();});
+  document.getElementById("ascBtn").addEventListener("click",()=>{sortAsc=true; schedulePage=1; renderSchedule();});
+  document.getElementById("descBtn").addEventListener("click",()=>{sortAsc=false; schedulePage=1; renderSchedule();});
+  document.getElementById("summaryBtn").addEventListener("click", () => {
+    const container = document.getElementById("chartContainer"); if(container.style.display === "block"){ container.style.display="none"; return; }
+    container.style.display = "block"; const view = getScheduleView(); const byMonth = {};
+    view.forEach(r => { const d = formatDate(r["날짜"]); if(d) byMonth[d.slice(0,7)] = (byMonth[d.slice(0,7)]||0) + 1; });
+    const labels = Object.keys(byMonth).sort(); const data = labels.map(k => byMonth[k]);
+    const ctx = document.getElementById('scheduleChart').getContext('2d'); if(scheduleChartInstance) scheduleChartInstance.destroy();
+    scheduleChartInstance = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: '작업 건수', data, backgroundColor: 'rgba(74, 144, 226, 0.6)' }] }, options: { maintainAspectRatio:false, scales:{y:{beginAtZero:true}} } });
+  });
+
+  /* ================= 2. 전화번호부 & 3. 버켓주기 & 4. 설비관리 ================= */
+  let pbPage=1, pageSizePhone=10, pbRowMap=new Map();
+  async function loadPhonebook(){
+    const res = await fetch(API_URL+"?action=phone_get"); const rows = await res.json();
+    pbRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>pbRowMap.set(it.row,it.cells));
+    const kw = (document.getElementById('pbSearch').value||"").toLowerCase();
+    const filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
+    const totalPages = Math.ceil(filtered.length/pageSizePhone)||1; if(pbPage>totalPages) pbPage=1;
+    const start=(pbPage-1)*pageSizePhone, end=start+pageSizePhone;
+    const tb = document.querySelector("#pbTable tbody"); tb.innerHTML="";
+    filtered.slice(start,end).forEach(it=>{
+      const r = it.cells, tr = document.createElement("tr");
+      tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><button onclick='openPhoneModal(${it.row})'>✏️</button> <button onclick='deletePhone(${it.row})' class="btn-danger">🗑️</button></td>`;
+      tb.appendChild(tr);
+    });
+    renderPaginator("pbPagination",totalPages,(p)=>{pbPage=p;loadPhonebook();},pbPage);
+  }
+  function openPhoneModal(row){ currentPbRow = row; const old = pbRowMap.get(row)||["","","",""]; document.getElementById('m_pbDept').value = old[0]; document.getElementById('m_pbPos').value = old[1]; document.getElementById('m_pbName').value = old[2]; document.getElementById('m_pbPhone').value = old[3]; openModal('phoneModal'); }
+  async function savePhoneFromModal(){ const dept=document.getElementById('m_pbDept').value, pos=document.getElementById('m_pbPos').value, name=document.getElementById('m_pbName').value, phone=document.getElementById('m_pbPhone').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_update",row:currentPbRow, dept,position:pos,name,phone})}); closeModal('phoneModal'); loadPhonebook(); }
+  async function savePhonebook(){ const dept=document.getElementById('pbDept').value, pos=document.getElementById('pbPosition').value, name=document.getElementById('pbName').value, phone=document.getElementById('pbPhone').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_add",dept,position:pos,name,phone})}); document.getElementById('pbDept').value=""; document.getElementById('pbPosition').value=""; document.getElementById('pbName').value=""; document.getElementById('pbPhone').value=""; loadPhonebook(); }
+  async function deletePhone(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_delete",row})}); loadPhonebook(); } }
+  document.getElementById("pbSearch").addEventListener("input",()=>{pbPage=1;loadPhonebook();});
+
+  let bkPage=1, pageSizeBucket=10, bkRowMap=new Map(), bkSortAsc=false;
+  function getElapsedTime(dateStr) { const target = new Date(dateStr); const now = new Date(); if(isNaN(target)) return "-"; const diffDays = Math.ceil(Math.abs(now - target) / (1000 * 60 * 60 * 24)); return diffDays < 30 ? `${diffDays}일 전` : `${Math.floor(diffDays/30)}개월 전`; }
+  async function loadBucket(){
+    const res = await fetch(API_URL+"?action=bucket_get"); const rows = await res.json();
+    bkRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>bkRowMap.set(it.row,it.cells));
+    const kw = (document.getElementById('bkSearch').value||"").toLowerCase();
+    let filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
+    filtered.sort((a,b)=>{ const da=new Date(a.cells[1]), db=new Date(b.cells[1]); return !isNaN(da)&&!isNaN(db) ? (bkSortAsc?da-db:db-da) : 0; });
+    const totalPages = Math.ceil(filtered.length/pageSizeBucket)||1; if(bkPage>totalPages) bkPage=1;
+    const start=(bkPage-1)*pageSizeBucket, end=start+pageSizeBucket;
+    const tb = document.querySelector("#bkTable tbody"); tb.innerHTML="";
+    filtered.slice(start,end).forEach(it=>{
+      const r = it.cells, tr = document.createElement("tr");
+      tr.innerHTML=`<td>${r[0]}</td><td>${formatDate(r[1])}</td><td style="color:var(--accent-color)">${getElapsedTime(r[1])}</td><td>${r[2]}</td><td><button onclick='openBucketModal(${it.row})'>✏️</button> <button onclick='deleteBucket(${it.row})' class="btn-danger">🗑️</button></td>`;
+      tb.appendChild(tr);
+    });
+    renderPaginator("bkPagination",totalPages,(p)=>{bkPage=p;loadBucket();},bkPage);
+  }
+  function openBucketModal(row){ currentBkRow = row; const old = bkRowMap.get(row)||["","",""]; document.getElementById('m_bkDept').value = old[0]; document.getElementById('m_bkDate').value = formatDate(old[1]); document.getElementById('m_bkNote').value = old[2]; openModal('bucketModal'); }
+  async function saveBucketFromModal(){ const dept=document.getElementById('m_bkDept').value, date=document.getElementById('m_bkDate').value, note=document.getElementById('m_bkNote').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_update",row:currentBkRow, dept,date,note})}); closeModal('bucketModal'); loadBucket(); }
+  async function saveBucket(){ const dept=document.getElementById('bkDept').value, date=document.getElementById('bkDate').value, note=document.getElementById('bkNote').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_add",dept,date,note})}); document.getElementById('bkDept').value=""; document.getElementById('bkDate').value=""; document.getElementById('bkNote').value=""; loadBucket(); }
+  async function deleteBucket(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_delete",row})}); loadBucket(); } }
+  document.getElementById("bkSearch").addEventListener("input",()=>{bkPage=1;loadBucket();});
+  document.getElementById("bkAscBtn").addEventListener("click",()=>{ bkSortAsc=true; bkPage=1; loadBucket(); });
+  document.getElementById("bkDescBtn").addEventListener("click",()=>{ bkSortAsc=false; bkPage=1; loadBucket(); });
+
+  let esPage=1, pageSizeSpec=5, esRowMap=new Map(), currentSpecRow = null; 
+  const defaultSpecs = ["크레인 종류", "양정", "정격 속도", "모터", "감속기", "레일", "와이어로프"];
+  async function loadEquipmentSpec(){
+    const res = await fetch(API_URL+"?action=spec_get"); const rows = await res.json();
+    esRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>esRowMap.set(it.row,it.cells));
+    const kw = (document.getElementById('esSearch').value||"").toLowerCase(); const tb = document.querySelector("#esTable tbody");
+    if(kw.length === 0) { tb.innerHTML = "<tr><td colspan='5' style='text-align:center;'>검색어를 입력하면 설비 목록이 표시됩니다.</td></tr>"; document.getElementById("esPagination").innerHTML=""; return; }
+    let filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
+    const totalPages = Math.ceil(filtered.length/pageSizeSpec)||1; if(esPage>totalPages) esPage=1;
+    const start=(esPage-1)*pageSizeSpec, end=start+pageSizeSpec;
+    tb.innerHTML="";
+    filtered.slice(start,end).forEach(it=>{
+      const r=it.cells, tr=document.createElement("tr");
+      let specDisplay = "없음";
+      try { const parsed = JSON.parse(r[3]); if(Object.keys(parsed).length > 0) specDisplay = Object.entries(parsed).map(([k,v]) => `<div style="padding:1px 0;"><b>${k}</b>: ${v}</div>`).join(""); } catch {}
+      tr.innerHTML=`<td>${r[0]}</td><td style="font-weight:bold; color:var(--primary-color);">${r[1]}</td><td>${r[2]||'-'}</td><td style="font-size:0.9em; color:#ccc; line-height:1.4;">${specDisplay}</td><td><button onclick='openSpecModal("edit", ${it.row})'>📝 상세/수정</button> <button onclick='deleteEquipmentSpec(${it.row})' class="btn-danger">🗑️</button></td>`;
+      tb.appendChild(tr);
+    });
+    renderPaginator("esPagination",totalPages,(p)=>{esPage=p;loadEquipmentSpec();},esPage);
+  }
+  function openSpecModal(mode, row = null) {
+      const tbody = document.querySelector("#modalSpecTable tbody"); tbody.innerHTML = ""; const metaInfo = document.getElementById("modalMetaInfo");
+      if (mode === 'new') { const team=document.getElementById('esTeam').value, id=document.getElementById('esEqId').value, loc=document.getElementById('esLocation').value; if(!team || !id) { alert("팀과 ID 필요"); return; } currentSpecRow=null; metaInfo.textContent=`신규: [${team}] ${id}`; defaultSpecs.forEach(k => addModalRow(k, "")); } 
+      else { currentSpecRow = row; const data = esRowMap.get(row); metaInfo.textContent = `수정: [${data[0]}] ${data[1]}`; try { const json = JSON.parse(data[3]); Object.entries(json).forEach(([k,v])=>addModalRow(k,v)); } catch { defaultSpecs.forEach(k => addModalRow(k, "")); } }
+      openModal('specModal');
+  }
+  function addModalRow(key="", value="") { const tbody = document.querySelector("#modalSpecTable tbody"); const tr = document.createElement("tr"); tr.innerHTML = `<td><input type="text" value="${key}" style="width:95%"></td><td><input type="text" value="${value}" style="width:95%"></td><td style="text-align:center;"><button onclick="this.closest('tr').remove()" class="btn-danger">x</button></td>`; tbody.appendChild(tr); }
+  async function saveSpecFromModal() {
+      const rows = document.querySelectorAll("#modalSpecTable tbody tr"); const newSpec = {}; rows.forEach(tr => { const inputs = tr.querySelectorAll("input"); if(inputs[0].value) newSpec[inputs[0].value] = inputs[1].value; }); const specStr = JSON.stringify(newSpec);
+      if (currentSpecRow === null) { const team=document.getElementById('esTeam').value, eqId=document.getElementById('esEqId').value, location=document.getElementById('esLocation').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_add", team, eqId, location, spec: specStr})}); document.getElementById('esTeam').value=""; document.getElementById('esEqId').value=""; document.getElementById('esLocation').value=""; } 
+      else { const old = esRowMap.get(currentSpecRow); await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_update", row: currentSpecRow, team: old[0], eqId: old[1], location: old[2], spec: specStr})}); }
+      closeModal('specModal'); alert("저장됨"); loadEquipmentSpec();
+  }
+  async function deleteEquipmentSpec(row){ if(confirm("삭제?")) { await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_delete",row})}); loadEquipmentSpec(); } }
+  document.getElementById("esSearch").addEventListener("input",()=>{esPage=1;loadEquipmentSpec();});
+
+  /* ================= 5. 발주정보 ================= */
+  let odPage=1, pageSizeOrder=10, odRowMap=new Map(), odSortAsc=false;
+  
+  async function loadOrder(){
+    const res = await fetch(API_URL+"?action=order_get"); const rows = await res.json();
+    odRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>odRowMap.set(it.row,it.cells));
+    const kw = (document.getElementById('odSearch').value||"").toLowerCase();
+    const filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
+    filtered.sort((a,b)=>odSortAsc ? a.row-b.row : b.row-a.row);
+    
+    const totalPages = Math.ceil(filtered.length/pageSizeOrder)||1; if(odPage>totalPages) odPage=1;
+    const start=(odPage-1)*pageSizeOrder, end=start+pageSizeOrder;
+    const tb = document.querySelector("#odTable tbody"); tb.innerHTML="";
+    
+    filtered.slice(start,end).forEach(it=>{
+      const r=it.cells, tr=document.createElement("tr");
+      // T열은 index 19 (0부터 시작: A=0 ... T=19)
+      let status = { permit: false, done: false };
+      try { if(r[19]) status = JSON.parse(r[19]); } catch(e){}
+
+      // [변경점 1] 공사명(r[5])과 작업내용(r[6])에 ellipsis-cell 클래스 추가 및 툴팁(title) 추가
+      // [변경점 2] PO번호(r[2])에 searchScheduleByPO 링크 연결
+      tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td>
+                    <td><span class="link-text" onclick="searchScheduleByPO('${r[2]}')">${r[2]}</span></td>
+                    <td>${r[3]}</td><td>${r[4]}</td>
+                    <td><span class="ellipsis-cell" title="${r[5]}">${r[5]}</span></td>
+                    <td><span class="ellipsis-cell" title="${r[6]}">${r[6]}</span></td>
+                    <td>
+                        <label class="status-label ${status.permit?'status-checked':''}"><input type="checkbox" onchange="updateOrderStatus(${it.row}, 'permit', this.checked)" ${status.permit?'checked':''}> 허가발행</label><br>
+                        <label class="status-label ${status.done?'status-checked':''}"><input type="checkbox" onchange="updateOrderStatus(${it.row}, 'done', this.checked)" ${status.done?'checked':''}> 작업완료</label>
+                    </td>
+                    <td><button onclick='openOrderModal(${it.row})'>✏️</button> <button onclick='deleteOrder(${it.row})' class="btn-danger">🗑️</button></td>`;
+      tb.appendChild(tr);
+    });
+    renderPaginator("odPagination",totalPages,(p)=>{odPage=p;loadOrder();},odPage);
+  }
+
+  async function updateOrderStatus(row, key, checked) {
+      const oldCells = odRowMap.get(row);
+      if(!oldCells) return;
+      
+      let status = { permit: false, done: false };
+      // T열(index 19) 데이터 파싱
+      try { if(oldCells[19]) status = JSON.parse(oldCells[19]); } catch(e){}
+      
+      // 1. 로컬 데이터 즉시 업데이트 (화면 깜빡임 방지)
+      status[key] = checked;
+      const jsonStr = JSON.stringify(status);
+      oldCells[19] = jsonStr; 
+
+      // 2. 서버로 비동기 전송 (사용자는 기다릴 필요 없음)
+      try {
+          await fetch(API_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                  action: "order_update", 
+                  row: row,
+                  bid: oldCells[0], req: oldCells[1], po: oldCells[2],
+                  requester: oldCells[3], buyer: oldCells[4], project: oldCells[5], permit: oldCells[6],
+                  note: jsonStr 
+              })
+          });
+      } catch (error) {
+          console.error("저장 실패", error);
+          alert("서버 저장 중 오류가 발생했습니다. 새로고침합니다.");
+          loadOrder(); 
+      }
+  }
+
+  function openOrderModal(row){
+      currentOdRow = row; const old = odRowMap.get(row)||["","","","","","",""];
+      document.getElementById('m_odBid').value = old[0]; document.getElementById('m_odReq').value = old[1];
+      document.getElementById('m_odPo').value = old[2]; document.getElementById('m_odRequester').value = old[3];
+      document.getElementById('m_odBuyer').value = old[4]; document.getElementById('m_odProject').value = old[5];
+      document.getElementById('m_odPermit').value = old[6]; 
+      
+      // Modal Read T (19)
+      let status = { permit: false, done: false };
+      try { if(old[19]) status = JSON.parse(old[19]); } catch{}
+      document.getElementById('m_odPermitCheck').checked = status.permit;
+      document.getElementById('m_odDoneCheck').checked = status.done;
+      
+      openModal('orderModal');
+  }
+
+  async function saveOrderFromModal(){
+      const bid=document.getElementById('m_odBid').value, req=document.getElementById('m_odReq').value;
+      const po=document.getElementById('m_odPo').value, requester=document.getElementById('m_odRequester').value;
+      const buyer=document.getElementById('m_odBuyer').value, project=document.getElementById('m_odProject').value;
+      const permit=document.getElementById('m_odPermit').value;
+      
+      const status = {
+          permit: document.getElementById('m_odPermitCheck').checked,
+          done: document.getElementById('m_odDoneCheck').checked
+      };
+
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({
+          action:"order_update", row: currentOdRow, 
+          bid, req, po, requester, buyer, project, permit,
+          note: JSON.stringify(status)
+      })});
+      closeModal('orderModal'); loadOrder();
+  }
+
+  async function saveOrder(){
+      const bid=document.getElementById('odBid').value, req=document.getElementById('odReq').value;
+      const po=document.getElementById('odPo').value, requester=document.getElementById('odRequester').value;
+      const buyer=document.getElementById('odBuyer').value, project=document.getElementById('odProject').value;
+      const permit=document.getElementById('odPermit').value;
+      
+      const defaultStatus = JSON.stringify({ permit: false, done: false });
+
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({
+          action:"order_add", bid, req, po, requester, buyer, project, permit,
+          note: defaultStatus
+      })});
+      
+      [odBid,odReq,odPo,odRequester,odBuyer,odProject,odPermit].forEach(el=>el.value="");
+      loadOrder();
+  }
+
+  async function deleteOrder(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"order_delete",row})}); loadOrder(); } }
+  document.getElementById("odSearch").addEventListener("input",()=>{odPage=1;loadOrder();});
+  document.getElementById("odAscBtn").addEventListener("click",()=>{ odSortAsc=true; odPage=1; loadOrder(); });
+  document.getElementById("odDescBtn").addEventListener("click",()=>{ odSortAsc=false; odPage=1; loadOrder(); });
+
+  /* Init */
+  loadSchedule(true); loadPhonebook(); loadBucket(); loadOrder(); loadEquipmentSpec();
+</script>
+</body>
+</html>

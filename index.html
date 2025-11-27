@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>(주)영선기계 통합 관리 시스템 v5.2 (Attendance)</title>
+  <title>(주)영선기계 통합 관리 시스템 v5.2 (Final Fix)</title>
   
   <meta name="theme-color" content="#4A90E2">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2920/2920323.png">
@@ -235,7 +235,7 @@
     }
     .header-link-btn:hover { background: var(--primary-color); color: #fff; }
 
-    /* ============ 근태관리 스타일 추가 ============ */
+    /* ============ 근태관리 스타일 ============ */
     .clock-display {
         font-size: 2.5em; font-weight: bold; color: #fff; text-align: center;
         margin: 10px 0 20px 0; letter-spacing: 2px;
@@ -279,7 +279,8 @@
 
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('schedule')">📅 일정관리</button>
-    <button class="tab-btn" onclick="switchTab('attendance')">⏱️ 근태관리</button> <button class="tab-btn" onclick="switchTab('phonebook')">📞 전화번호부</button>
+    <button class="tab-btn" onclick="switchTab('attendance')">⏱️ 근태관리</button>
+    <button class="tab-btn" onclick="switchTab('phonebook')">📞 전화번호부</button>
     <button class="tab-btn" onclick="switchTab('bucket')">🪣 버켓주기</button>
     <button class="tab-btn" onclick="switchTab('equipment')">📄 설비관리</button>
     <button class="tab-btn" onclick="switchTab('order')">📦 발주정보</button>
@@ -613,11 +614,9 @@
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
     const buttons = document.querySelectorAll('.tab-btn');
-    // 'attendance' 추가됨
     const idx = ['schedule','attendance','phonebook','bucket','equipment','order'].indexOf(tabId);
     if(idx>=0 && buttons[idx]) buttons[idx].classList.add('active');
     
-    // 근태 탭이면 시계 작동 시작
     if(tabId === 'attendance') startClock();
   }
 
@@ -904,7 +903,7 @@
 
   /* ================= 2. 전화번호부 ================= */
   let pbPage=1, pageSizePhone=10, pbRowMap=new Map();
-  let pbAllData = []; // 전체 데이터 저장용
+  let pbAllData = []; 
 
   async function loadPhonebook(){
     const res = await fetch(API_URL+"?action=phone_get"); const rows = await res.json();
@@ -913,7 +912,7 @@
     pbAllData.forEach(it=>pbRowMap.set(it.row,it.cells));
     
     renderPhonebookTable();
-    renderAttendanceGrid(); // 근태 현황판 갱신
+    renderAttendanceGrid();
   }
 
   function renderPhonebookTable() {
@@ -936,9 +935,8 @@
   async function deletePhone(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_delete",row})}); loadPhonebook(); } }
   document.getElementById("pbSearch").addEventListener("input",()=>{pbPage=1;renderPhonebookTable();});
 
-  /* ================= 2-1. 근태관리 (v5.2 New) ================= */
-  // 상태 저장소 (로컬) - 실제론 GAS에 저장해야 함
-  const attendanceState = {}; // { "이름": "working" | "off" }
+  /* ================= 2-1. 근태관리 ================= */
+  const attendanceState = {}; 
 
   function startClock() {
       setInterval(() => {
@@ -951,7 +949,6 @@
       const container = document.getElementById('attendanceGrid');
       container.innerHTML = "";
       
-      // "영선"이 포함된 부서 필터링
       const targets = pbAllData.filter(it => (it.cells[0]||"").includes("영선"));
       
       if(targets.length === 0) {
@@ -978,7 +975,6 @@
   }
 
   function toggleAttendance(name) {
-      // 상태 토글
       if (attendanceState[name] === 'working') {
           if(confirm(`${name}님, 퇴근 처리하시겠습니까?`)) {
               attendanceState[name] = 'off';
@@ -988,10 +984,7 @@
               attendanceState[name] = 'working';
           }
       }
-      renderAttendanceGrid(); // 화면 갱신
-      
-      // TODO: 실제로는 여기서 API_URL로 데이터를 전송해야 영구 저장됩니다.
-      // await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "attendance_log", name, status: attendanceState[name] }) });
+      renderAttendanceGrid(); 
   }
 
 
@@ -1026,18 +1019,18 @@
 
   /* ================= 4. 설비관리 ================= */
   let esPage=1, pageSizeSpec=5, esRowMap=new Map(), currentSpecRow = null; 
-  let esAllData = []; // 모든 데이터 저장용
+  let esAllData = []; 
+  
+  // [수정] 누락되었던 defaultSpecs 정의 복구
+  const defaultSpecs = ["크레인 종류", "양정", "정격 속도", "모터", "감속기", "레일", "와이어로프"];
 
   async function loadEquipmentSpec(){
     const res = await fetch(API_URL+"?action=spec_get"); const rows = await res.json();
     esRowMap.clear(); 
-    // 데이터 전처리
     esAllData = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); 
     esAllData.forEach(it=>esRowMap.set(it.row,it.cells));
     
-    // 필터 옵션 초기화 (팀 목록)
     initTeamFilter();
-    
     renderEquipmentTable();
   }
 
@@ -1046,11 +1039,8 @@
       esAllData.forEach(it => {
           if(it.cells[0]) teams.add(it.cells[0]);
       });
-      
       const teamSel = document.getElementById('filterTeam');
-      // 기존 옵션 초기화 (첫번째 '모든 팀' 제외)
       while(teamSel.options.length > 1) teamSel.remove(1);
-      
       Array.from(teams).sort().forEach(t => {
           const opt = document.createElement('option'); opt.value = t; opt.textContent = t; teamSel.appendChild(opt);
       });
@@ -1059,20 +1049,14 @@
   function updateLocationOptions() {
       const selectedTeam = document.getElementById('filterTeam').value;
       const locSel = document.getElementById('filterLoc');
-      
-      // 1. 필터링 대상 데이터 결정
       let sourceData = esAllData;
       if (selectedTeam) {
           sourceData = esAllData.filter(it => it.cells[0] === selectedTeam);
       }
-
-      // 2. 유니크한 위치 추출
       const locs = new Set();
       sourceData.forEach(it => {
           if(it.cells[2]) locs.add(it.cells[2]);
       });
-
-      // 3. 위치 셀렉트 박스 갱신
       locSel.innerHTML = '<option value="">📍 모든 위치 보기</option>';
       Array.from(locs).sort().forEach(l => {
           const opt = document.createElement('option'); 
@@ -1089,10 +1073,8 @@
       
       let filtered = esAllData.filter(it => {
           const r = it.cells;
-          // 필터 조건 확인
           if (teamFilter && r[0] !== teamFilter) return false;
           if (locFilter && r[2] !== locFilter) return false;
-          // 검색어 확인 (ID, 스펙 내용 등 포함)
           if (keyword) {
               const hay = r.join(" ").toLowerCase(); 
               if (!hay.includes(keyword)) return false;
@@ -1103,7 +1085,6 @@
       const totalPages = Math.ceil(filtered.length/pageSizeSpec)||1; 
       if(esPage > totalPages) esPage=1;
       const start=(esPage-1)*pageSizeSpec, end=start+pageSizeSpec;
-      
       const tb = document.querySelector("#esTable tbody"); 
       tb.innerHTML="";
       
@@ -1135,16 +1116,15 @@
 
   function resetEquipmentFilter() {
       document.getElementById('filterTeam').value = "";
-      document.getElementById('filterLoc').value = ""; // 값 초기화
-      updateLocationOptions(); // 위치 옵션도 전체로 복구
+      document.getElementById('filterLoc').value = ""; 
+      updateLocationOptions(); 
       document.getElementById('esSearch').value = "";
       esPage = 1;
       renderEquipmentTable();
   }
 
-  // 이벤트 리스너 연결
   document.getElementById('filterTeam').addEventListener('change', () => { 
-      updateLocationOptions(); // 팀 변경 시 위치 옵션 갱신
+      updateLocationOptions(); 
       esPage=1; 
       renderEquipmentTable(); 
   });
@@ -1153,9 +1133,33 @@
 
   function openSpecModal(mode, row = null) {
       const tbody = document.querySelector("#modalSpecTable tbody"); tbody.innerHTML = ""; const metaInfo = document.getElementById("modalMetaInfo");
-      if (mode === 'new') { const team=document.getElementById('esTeam').value, id=document.getElementById('esEqId').value, loc=document.getElementById('esLocation').value; if(!team || !id) { alert("팀과 ID 필요"); return; } currentSpecRow=null; metaInfo.textContent=`신규: [${team}] ${id}`; defaultSpecs.forEach(k => addModalRow(k, "")); } 
-      else { currentSpecRow = row; const data = esRowMap.get(row); metaInfo.textContent = `수정: [${data[0]}] ${data[1]}`; try { const json = JSON.parse(data[3]); Object.entries(json).forEach(([k,v])=>addModalRow(k,v)); } catch { defaultSpecs.forEach(k => addModalRow(k, "")); } }
-      openModal('specModal');
+      try {
+          if (mode === 'new') { 
+              const team=document.getElementById('esTeam').value;
+              const id=document.getElementById('esEqId').value;
+              
+              if(!team || !id) { alert("팀과 ID를 먼저 입력해주세요."); return; } 
+              
+              currentSpecRow=null; 
+              metaInfo.textContent=`신규: [${team}] ${id}`; 
+              defaultSpecs.forEach(k => addModalRow(k, "")); 
+          } 
+          else { 
+              currentSpecRow = row; 
+              const data = esRowMap.get(row); 
+              metaInfo.textContent = `수정: [${data[0]}] ${data[1]}`; 
+              try { 
+                  const json = JSON.parse(data[3]); 
+                  Object.entries(json).forEach(([k,v])=>addModalRow(k,v)); 
+              } catch { 
+                  defaultSpecs.forEach(k => addModalRow(k, "")); 
+              } 
+          }
+          openModal('specModal');
+      } catch (e) {
+          console.error(e);
+          alert("오류가 발생했습니다. 관리자에게 문의하세요.");
+      }
   }
   function addModalRow(key="", value="") { const tbody = document.querySelector("#modalSpecTable tbody"); const tr = document.createElement("tr"); tr.innerHTML = `<td><input type="text" value="${key}" style="width:95%"></td><td><input type="text" value="${value}" style="width:95%"></td><td style="text-align:center;"><button onclick="this.closest('tr').remove()" class="btn-danger">x</button></td>`; tbody.appendChild(tr); }
   async function saveSpecFromModal() {

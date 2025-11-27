@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>(주)영선기계 통합 관리 시스템 v5.2 (Final Fix)</title>
+  <title>(주)영선기계 통합 관리 시스템 v5.2 (Link Patch)</title>
   
   <meta name="theme-color" content="#4A90E2">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2920/2920323.png">
@@ -33,8 +33,6 @@
     }
 
     h2, h3 { margin-top: 0; color: #fff; }
-
-    /* 화면 너비 95% 설정 */
     .container { max-width: 95%; margin: 0 auto; }
     
     .tab-nav {
@@ -78,23 +76,17 @@
     th { background: #252525; color: var(--text-muted); font-weight: 600; }
     tr:hover { background: #2a2a2a; }
 
-    .ellipsis-cell {
-        max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; border-bottom: none !important;
-    }
+    .ellipsis-cell { max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; border-bottom: none !important; }
     td:has(.ellipsis-cell) { max-width: 180px; }
 
-    /* 상태 뱃지 */
     .status-badge {
         display: inline-block; padding: 6px 10px; border-radius: 6px;
         font-size: 0.8em; font-weight: bold; color: #fff; text-align: center;
         min-width: 60px; cursor: pointer; margin: 2px;
-        background-color: #444; color: #aaa;
-        border: 1px solid #555;
-        transition: all 0.1s;
-        user-select: none;
+        background-color: #444; color: #aaa; border: 1px solid #555;
+        transition: all 0.1s; user-select: none;
     }
     .status-badge:hover { filter: brightness(1.2); }
-    
     .status-badge.permit-active { background-color: var(--primary-color) !important; color: #fff !important; border-color: var(--primary-color) !important; } 
     .status-badge.done-active { background-color: var(--success-color) !important; color: #000 !important; border-color: var(--success-color) !important; } 
 
@@ -130,43 +122,16 @@
     .checkbox-group label { display: flex; align-items: center; cursor: pointer; color: #fff; margin:0; }
     .checkbox-group input { width: 18px; height: 18px; margin-right: 8px; accent-color: var(--primary-color); }
 
-    /* ============ 달력 뷰 (Compact Split View) ============ */
-    .split-view-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-    .calendar-panel {
-      flex: 1;
-      min-width: 350px;
-      background: #252525;
-      padding: 15px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-    .detail-panel {
-      flex: 1;
-      min-width: 350px;
-      background: var(--surface-color);
-      padding: 0;
-      border-radius: 12px;
-    }
-    
-    .calendar-header {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
-    }
+    /* 달력 뷰 (v5.2 기본) */
+    .split-view-container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .calendar-panel { flex: 1; min-width: 350px; background: #252525; padding: 15px; border-radius: 12px; border: 1px solid var(--border-color); }
+    .detail-panel { flex: 1; min-width: 350px; background: var(--surface-color); padding: 0; border-radius: 12px; }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .month-display { font-size: 1.2em; font-weight: bold; color: #fff; }
-    
-    .calendar-grid {
-      display: grid; grid-template-columns: repeat(7, 1fr);
-      gap: 2px; /* 셀 간격 */
-    }
-    .day-header {
-      text-align: center; font-size: 0.9em; color: var(--text-muted); padding: 5px 0;
-    }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .day-header { text-align: center; font-size: 0.9em; color: var(--text-muted); padding: 5px 0; }
     .day-cell {
-      background: #333;
-      aspect-ratio: 1.2 / 1; /* 정사각형에 가깝게 */
+      background: #333; aspect-ratio: 1.2 / 1;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       padding-top: 5px; cursor: pointer; border-radius: 4px; transition: 0.2s;
     }
@@ -174,21 +139,15 @@
     .day-cell.other-month { opacity: 0.3; pointer-events: none; }
     .day-cell.selected { background: #2d4561; border: 2px solid var(--primary-color); }
     .day-cell.today .day-number { color: var(--primary-color); font-weight: bold; text-decoration: underline; }
-    
     .day-number { font-size: 14px; margin-bottom: 4px; }
     
-    /* 일정 표시 점 (Dot) */
+    /* 기본 도트 스타일 (단색) */
     .event-dots { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; }
-    .dot {
-      width: 6px; height: 6px; border-radius: 50%; background-color: var(--accent-color);
-    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background-color: var(--accent-color); }
     .dot.many { background-color: #ff9f43; } 
 
-    /* 상세 리스트 스타일 (카드 디자인) */
-    .detail-header {
-        padding: 15px; border-bottom: 1px solid var(--border-color);
-        display: flex; justify-content: space-between; align-items: center;
-    }
+    /* 상세 리스트 */
+    .detail-header { padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
     .detail-list { padding: 15px; max-height: 500px; overflow-y: auto; }
     .empty-state { text-align: center; color: var(--text-muted); padding: 30px 0; }
     
@@ -197,68 +156,26 @@
         position: relative; transition: transform 0.2s; display: flex; flex-direction: column; gap: 6px;
     }
     .sch-item-card:hover { transform: translateX(5px); border-color: var(--primary-color); }
-    
-    /* 팀 이름 */
     .sch-team { font-size: 0.9em; color: var(--primary-color); font-weight: bold; }
-    /* 작업 내용 */
     .sch-work { font-size: 1.1em; font-weight: bold; color: #fff; line-height: 1.3; }
-    /* 메타 정보 */
     .sch-meta { font-size: 0.85em; color: #ccc; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
     .sch-divider { color: #555; font-size: 0.8em; }
-    /* 필수 자재 */
     .sch-mat { font-size: 0.85em; color: var(--warning-color); font-weight: 500; display: flex; align-items: center; gap: 5px; }
-    
     .sch-actions { position: absolute; top: 15px; right: 15px; }
 
-    /* 필터 스타일 */
-    .filter-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 10px;
-        background: #2c2c2c;
-        padding: 10px;
-        border-radius: 8px;
-    }
-    .filter-container select {
-        min-width: 150px;
-        background: #1e1e1e;
-        border: 1px solid #555;
-    }
-    
-    /* 링크 버튼 스타일 */
-    .header-link-btn {
-        text-decoration: none; color: var(--primary-color); 
-        border: 1px solid var(--primary-color); padding: 5px 12px; 
-        border-radius: 6px; font-size: 0.9em; font-weight: bold;
-        transition: all 0.2s; display: flex; align-items: center; gap: 5px;
-    }
+    .filter-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; background: #2c2c2c; padding: 10px; border-radius: 8px; }
+    .header-link-btn { text-decoration: none; color: var(--primary-color); border: 1px solid var(--primary-color); padding: 5px 12px; border-radius: 6px; font-size: 0.9em; font-weight: bold; transition: all 0.2s; display: flex; align-items: center; gap: 5px; }
     .header-link-btn:hover { background: var(--primary-color); color: #fff; }
 
-    /* ============ 근태관리 스타일 ============ */
-    .clock-display {
-        font-size: 2.5em; font-weight: bold; color: #fff; text-align: center;
-        margin: 10px 0 20px 0; letter-spacing: 2px;
-    }
-    .attendance-grid {
-        display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 15px; margin-top: 20px;
-    }
-    .emp-card {
-        background: #2c2c2c; border: 1px solid #444; border-radius: 10px;
-        padding: 15px; text-align: center; cursor: pointer;
-        transition: all 0.2s; position: relative; overflow: hidden;
-    }
+    /* 근태 */
+    .clock-display { font-size: 2.5em; font-weight: bold; color: #fff; text-align: center; margin: 10px 0 20px 0; letter-spacing: 2px; }
+    .attendance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+    .emp-card { background: #2c2c2c; border: 1px solid #444; border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
     .emp-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-    
-    /* 출근 상태 */
     .emp-card.working { border-color: var(--success-color); background: rgba(0, 230, 118, 0.1); }
     .emp-card.working .status-indicator { color: var(--success-color); }
-    
-    /* 퇴근/미출근 상태 */
     .emp-card.off { border-color: #555; opacity: 0.8; }
     .emp-card.off .status-indicator { color: #777; }
-
     .emp-name { font-size: 1.2em; font-weight: bold; color: #fff; margin-bottom: 5px; }
     .emp-role { font-size: 0.9em; color: var(--primary-color); margin-bottom: 10px; }
     .status-indicator { font-size: 0.9em; font-weight: bold; display: block; }
@@ -269,11 +186,10 @@
 <div class="container">
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
     <h2>🛠️ (주)영선기계 통합 관리 시스템 v5.2</h2>
-    
     <div style="display:flex; align-items:center; gap: 10px;">
         <a href="https://she-p.koreazinc.co.kr" target="_blank" class="header-link-btn">🛠️ 허가신청</a>
         <a href="https://kzems.koreazinc.co.kr" target="_blank" class="header-link-btn">🚪 출입관리</a>
-        <span style="color:var(--text-muted); font-size:0.9em; margin-left:10px;">Last Updated: <span id="currentDateDisplay"></span></span>
+        <span style="color:var(--text-muted); font-size:0.9em; margin-left:10px;">Updated: <span id="currentDateDisplay"></span></span>
     </div>
   </div>
 
@@ -373,11 +289,9 @@
       <div class="card">
           <div class="clock-display" id="liveClock">00:00:00</div>
           <div style="text-align:center; color:var(--text-muted); margin-bottom:20px;">
-              직원 이름을 클릭하여 출근/퇴근 상태를 변경하세요. <br>
-              <small>(전화번호부 '영선' 부서 자동 연동)</small>
+              직원 이름을 클릭하여 출근/퇴근 상태를 변경하세요. <small>(전화번호부 '영선' 부서 자동 연동)</small>
           </div>
-          <div class="attendance-grid" id="attendanceGrid">
-              </div>
+          <div class="attendance-grid" id="attendanceGrid"></div>
       </div>
   </div>
 
@@ -527,311 +441,127 @@
   </div>
 </div>
 
-<div id="phoneModal" class="modal">
-  <div class="modal-content" style="max-width:500px;">
-    <div class="modal-header"><h3>📞 연락처 수정</h3><span class="close-modal" onclick="closeModal('phoneModal')">&times;</span></div>
-    <div class="modal-body">
-      <div class="form-grid" style="grid-template-columns: 1fr;">
-        <div class="form-group"><label>부서</label><input type="text" id="m_pbDept"></div>
-        <div class="form-group"><label>직책</label><input type="text" id="m_pbPos"></div>
-        <div class="form-group"><label>이름</label><input type="text" id="m_pbName"></div>
-        <div class="form-group"><label>전화번호</label><input type="text" id="m_pbPhone"></div>
-      </div>
-    </div>
-    <div class="modal-footer"><button onclick="closeModal('phoneModal')">취소</button><button onclick="savePhoneFromModal()" class="btn-primary">수정 저장</button></div>
-  </div>
-</div>
-
-<div id="bucketModal" class="modal">
-  <div class="modal-content" style="max-width:500px;">
-    <div class="modal-header"><h3>🪣 버켓 기록 수정</h3><span class="close-modal" onclick="closeModal('bucketModal')">&times;</span></div>
-    <div class="modal-body">
-      <div class="form-grid" style="grid-template-columns: 1fr;">
-        <div class="form-group"><label>부서/호기</label><input type="text" id="m_bkDept"></div>
-        <div class="form-group"><label>날짜</label><input type="date" id="m_bkDate"></div>
-        <div class="form-group"><label>비고</label><input type="text" id="m_bkNote"></div>
-      </div>
-    </div>
-    <div class="modal-footer"><button onclick="closeModal('bucketModal')">취소</button><button onclick="saveBucketFromModal()" class="btn-primary">수정 저장</button></div>
-  </div>
-</div>
-
-<div id="specModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header"><h3>🔧 설비 상세 스펙 편집</h3><span class="close-modal" onclick="closeModal('specModal')">&times;</span></div>
-    <div class="modal-body">
-      <div id="modalMetaInfo" style="margin-bottom:15px; color:var(--primary-color); font-weight:bold;"></div>
-      <table class="spec-table" id="modalSpecTable" style="width:100%; margin-bottom:15px; border-collapse:collapse;">
-        <thead><tr><th style="width:40%">항목명 (Key)</th><th style="width:40%">값 (Value)</th><th style="width:20%">삭제</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <button onclick="addModalRow()" style="width:100%; border:1px dashed #555;">+ 항목 추가</button>
-    </div>
-    <div class="modal-footer"><button onclick="closeModal('specModal')">취소</button><button onclick="saveSpecFromModal()" class="btn-primary">저장 완료</button></div>
-  </div>
-</div>
-
-<div id="orderModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header"><h3>📦 발주 정보 수정</h3><span class="close-modal" onclick="closeModal('orderModal')">&times;</span></div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group"><label>입찰번호</label><input type="text" id="m_odBid"></div>
-        <div class="form-group"><label>의뢰번호</label><input type="text" id="m_odReq"></div>
-        <div class="form-group"><label>구매PO번호</label><input type="text" id="m_odPo"></div>
-        <div class="form-group"><label>의뢰자</label><input type="text" id="m_odRequester"></div>
-        <div class="form-group"><label>구매담당자</label><input type="text" id="m_odBuyer"></div>
-        <div class="form-group"><label>공사명</label><input type="text" id="m_odProject"></div>
-        <div class="form-group"><label>작업내용</label><input type="text" id="m_odPermit"></div>
-        <div class="form-group">
-            <label style="color:var(--primary-color); font-weight:bold;">진행 상태 체크 (동시 선택 가능)</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" id="m_odPermitCheck"> 허가발행</label>
-                <label><input type="checkbox" id="m_odDoneCheck"> 작업완료</label>
-            </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer"><button onclick="closeModal('orderModal')">취소</button><button onclick="saveOrderFromModal()" class="btn-primary">수정 저장</button></div>
-  </div>
-</div>
+<div id="phoneModal" class="modal"><div class="modal-content" style="max-width:500px;"><div class="modal-header"><h3>📞 연락처 수정</h3><span class="close-modal" onclick="closeModal('phoneModal')">&times;</span></div><div class="modal-body"><div class="form-grid" style="grid-template-columns: 1fr;"><div class="form-group"><label>부서</label><input type="text" id="m_pbDept"></div><div class="form-group"><label>직책</label><input type="text" id="m_pbPos"></div><div class="form-group"><label>이름</label><input type="text" id="m_pbName"></div><div class="form-group"><label>전화번호</label><input type="text" id="m_pbPhone"></div></div></div><div class="modal-footer"><button onclick="closeModal('phoneModal')">취소</button><button onclick="savePhoneFromModal()" class="btn-primary">수정 저장</button></div></div></div>
+<div id="bucketModal" class="modal"><div class="modal-content" style="max-width:500px;"><div class="modal-header"><h3>🪣 버켓 기록 수정</h3><span class="close-modal" onclick="closeModal('bucketModal')">&times;</span></div><div class="modal-body"><div class="form-grid" style="grid-template-columns: 1fr;"><div class="form-group"><label>부서/호기</label><input type="text" id="m_bkDept"></div><div class="form-group"><label>날짜</label><input type="date" id="m_bkDate"></div><div class="form-group"><label>비고</label><input type="text" id="m_bkNote"></div></div></div><div class="modal-footer"><button onclick="closeModal('bucketModal')">취소</button><button onclick="saveBucketFromModal()" class="btn-primary">수정 저장</button></div></div></div>
+<div id="specModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>🔧 설비 상세 스펙 편집</h3><span class="close-modal" onclick="closeModal('specModal')">&times;</span></div><div class="modal-body"><div id="modalMetaInfo" style="margin-bottom:15px; color:var(--primary-color); font-weight:bold;"></div><table class="spec-table" id="modalSpecTable" style="width:100%; margin-bottom:15px; border-collapse:collapse;"><thead><tr><th style="width:40%">항목명 (Key)</th><th style="width:40%">값 (Value)</th><th style="width:20%">삭제</th></tr></thead><tbody></tbody></table><button onclick="addModalRow()" style="width:100%; border:1px dashed #555;">+ 항목 추가</button></div><div class="modal-footer"><button onclick="closeModal('specModal')">취소</button><button onclick="saveSpecFromModal()" class="btn-primary">저장 완료</button></div></div></div>
+<div id="orderModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>📦 발주 정보 수정</h3><span class="close-modal" onclick="closeModal('orderModal')">&times;</span></div><div class="modal-body"><div class="form-grid"><div class="form-group"><label>입찰번호</label><input type="text" id="m_odBid"></div><div class="form-group"><label>의뢰번호</label><input type="text" id="m_odReq"></div><div class="form-group"><label>구매PO번호</label><input type="text" id="m_odPo"></div><div class="form-group"><label>의뢰자</label><input type="text" id="m_odRequester"></div><div class="form-group"><label>구매담당자</label><input type="text" id="m_odBuyer"></div><div class="form-group"><label>공사명</label><input type="text" id="m_odProject"></div><div class="form-group"><label>작업내용</label><input type="text" id="m_odPermit"></div><div class="form-group"><label style="color:var(--primary-color); font-weight:bold;">진행 상태 체크 (동시 선택 가능)</label><div class="checkbox-group"><label><input type="checkbox" id="m_odPermitCheck"> 허가발행</label><label><input type="checkbox" id="m_odDoneCheck"> 작업완료</label></div></div></div></div><div class="modal-footer"><button onclick="closeModal('orderModal')">취소</button><button onclick="saveOrderFromModal()" class="btn-primary">수정 저장</button></div></div></div>
 
 <script>
-  // 반드시 아래 URL을 '새 배포' 후 나온 주소로 변경하세요!
+  // [중요] 배포 후 URL 확인
   const API_URL = "https://script.google.com/macros/s/AKfycbwh8AAXw_oWFvM6B0ifjVijLyfmWKmbCmX3yQSSiNlFeFctmMpgIAnE3cfS-GDJocN9iA/exec";
   
   const getTodayStr = () => { const d = new Date(); const pad = n => n<10 ? '0'+n : n; return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
   const TODAY_DATE_STR = getTodayStr(); document.getElementById('currentDateDisplay').textContent = TODAY_DATE_STR;
 
   /* --- Utils --- */
-  function formatDate(v) {
-    if (!v) return "";
-    try { const d = new Date(v); if (isNaN(d.getTime())) return v; const pad = n => n<10 ? '0'+n : n; return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; } catch { return v; }
-  }
-
-  function switchTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    const buttons = document.querySelectorAll('.tab-btn');
-    const idx = ['schedule','attendance','phonebook','bucket','equipment','order'].indexOf(tabId);
-    if(idx>=0 && buttons[idx]) buttons[idx].classList.add('active');
-    
-    if(tabId === 'attendance') startClock();
-  }
-
-  function renderPaginator(divId, totalPages, callback, currentPage){
-    const div = document.getElementById(divId); div.innerHTML = ""; if(totalPages < 2) return;
-    let startP = Math.max(1, currentPage - 2); let endP = Math.min(totalPages, startP + 4);
-    for(let i=startP; i<=endP; i++){
-      const b = document.createElement("button"); b.textContent = i; if(i === currentPage) b.classList.add("active");
-      b.onclick = () => callback(i); div.appendChild(b);
-    }
-  }
-
-  /* --- Modal Utils --- */
+  function formatDate(v) { if (!v) return ""; try { const d = new Date(v); if (isNaN(d.getTime())) return v; const pad = n => n<10 ? '0'+n : n; return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; } catch { return v; } }
+  function switchTab(tabId) { document.querySelectorAll('.tab-content').forEach(div => div.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(tabId).classList.add('active'); const buttons = document.querySelectorAll('.tab-btn'); const idx = ['schedule','attendance','phonebook','bucket','equipment','order'].indexOf(tabId); if(idx>=0 && buttons[idx]) buttons[idx].classList.add('active'); if(tabId === 'attendance') startClock(); }
+  function renderPaginator(divId, totalPages, callback, currentPage){ const div = document.getElementById(divId); div.innerHTML = ""; if(totalPages < 2) return; let startP = Math.max(1, currentPage - 2); let endP = Math.min(totalPages, startP + 4); for(let i=startP; i<=endP; i++){ const b = document.createElement("button"); b.textContent = i; if(i === currentPage) b.classList.add("active"); b.onclick = () => callback(i); div.appendChild(b); } }
   function openModal(id) { document.getElementById(id).classList.add('show'); }
   function closeModal(id) { document.getElementById(id).classList.remove('show'); }
   let currentSchRow=null, currentPbRow=null, currentBkRow=null, currentOdRow=null;
 
-  /* ================= 1. 일정관리 ================= */
-  const schedulePageSize=10, FIELDS=["날짜","생산팀","작업내용","담당자","발주번호","필수자재","허가번호","비고"];
+  /* ================= 1. 일정관리 (v5.2 Restore) ================= */
+  const schedulePageSize=10;
+  // [수정] 일정구분 제거됨 (총 8개 필드)
+  const FIELDS=["날짜","생산팀","작업내용","담당자","발주번호","필수자재","허가번호","비고"];
   let schedulePage=1, records=[], searchQuery="", sortKey="날짜", sortAsc=true, dateFilter={start:null,end:null};
   let scheduleChartInstance = null;
-  
-  let currentView = 'list';
-  let currentCalendarDate = new Date();
-  let selectedDate = TODAY_DATE_STR; 
+  let currentView = 'list'; let currentCalendarDate = new Date(); let selectedDate = TODAY_DATE_STR; 
 
   function toggleScheduleView(view) {
       currentView = view;
       document.getElementById('scheduleListView').style.display = view === 'list' ? 'block' : 'none';
       document.getElementById('scheduleCalendarView').style.display = view === 'calendar' ? 'block' : 'none';
       document.getElementById('scheduleInlineFormCard').style.display = view === 'list' ? 'block' : 'none'; 
-      
       document.getElementById('listViewBtn').style.background = view === 'list' ? 'var(--primary-color)' : '#555';
       document.getElementById('calendarViewBtn').style.background = view === 'calendar' ? 'var(--primary-color)' : '#555';
-
-      if (view === 'calendar') {
-          renderCalendar();
-          updateDetailPanel(selectedDate);
-      } else {
-          renderSchedule();
-      }
+      if (view === 'calendar') { renderCalendar(); updateDetailPanel(selectedDate); } else { renderSchedule(); }
   }
-
-  function changeMonth(delta) {
-      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
-      renderCalendar();
-  }
+  function changeMonth(delta) { currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); renderCalendar(); }
   
   function clickAddOnSelectedDate() {
-      document.getElementById('n_schTeam').value = "";
-      document.getElementById('n_schWork').value = "";
-      document.getElementById('n_schManager').value = "";
-      document.getElementById('n_schOrderNo').value = "";
-      document.getElementById('n_schMat').value = "";
-      document.getElementById('n_schPermit').value = "";
-      document.getElementById('n_schNote').value = "";
-      document.getElementById('n_schDate').value = selectedDate;
+      document.getElementById('n_schTeam').value = ""; document.getElementById('n_schWork').value = "";
+      document.getElementById('n_schManager').value = ""; document.getElementById('n_schOrderNo').value = "";
+      document.getElementById('n_schMat').value = ""; document.getElementById('n_schPermit').value = "";
+      document.getElementById('n_schNote').value = ""; document.getElementById('n_schDate').value = selectedDate;
       openModal('addScheduleModal');
   }
   
   async function saveNewScheduleFromModal(){
-      const date = document.getElementById('n_schDate').value;
-      const team = document.getElementById('n_schTeam').value;
-      const work = document.getElementById('n_schWork').value;
-      const manager = document.getElementById('n_schManager').value;
-      const orderNo = document.getElementById('n_schOrderNo').value;
-      const mat = document.getElementById('n_schMat').value;
-      const permit = document.getElementById('n_schPermit').value;
-      const note = document.getElementById('n_schNote').value;
-
-      if(!date || !team || !work || !manager || !orderNo) {
-          alert("필수 항목(날짜, 생산팀, 작업내용, 담당자, 발주번호)을 입력해주세요.");
-          return;
-      }
-
-      await fetch(API_URL, {
-          method: "POST",
-          body: JSON.stringify({
-              action: "add",
-              "날짜": date, "생산팀": team, "작업내용": work,
-              "담당자": manager, "발주번호": orderNo,
-              "필수자재": mat, "허가번호": permit, "비고": note
-          })
-      });
-
-      closeModal('addScheduleModal');
-      loadSchedule(); 
+      const date = document.getElementById('n_schDate').value, team = document.getElementById('n_schTeam').value;
+      const work = document.getElementById('n_schWork').value, manager = document.getElementById('n_schManager').value;
+      const orderNo = document.getElementById('n_schOrderNo').value, mat = document.getElementById('n_schMat').value;
+      const permit = document.getElementById('n_schPermit').value, note = document.getElementById('n_schNote').value;
+      if(!date || !team || !work || !manager || !orderNo) { alert("필수 항목(날짜, 생산팀, 작업내용, 담당자, 발주번호)을 입력해주세요."); return; }
+      await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "add", "날짜": date, "생산팀": team, "작업내용": work, "담당자": manager, "발주번호": orderNo, "필수자재": mat, "허가번호": permit, "비고": note }) });
+      closeModal('addScheduleModal'); loadSchedule(); 
   }
 
   function renderCalendar() {
-      const grid = document.getElementById('calendarGrid');
-      while(grid.children.length > 7) { grid.removeChild(grid.lastChild); }
-
-      const year = currentCalendarDate.getFullYear();
-      const month = currentCalendarDate.getMonth();
+      const grid = document.getElementById('calendarGrid'); while(grid.children.length > 7) { grid.removeChild(grid.lastChild); }
+      const year = currentCalendarDate.getFullYear(); const month = currentCalendarDate.getMonth();
       document.getElementById('currentMonthDisplay').textContent = `${year}년 ${month + 1}월`;
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const lastDate = new Date(year, month + 1, 0).getDate();
-      const lastDatePrev = new Date(year, month, 0).getDate();
-
-      const schedulesByDate = records.reduce((acc, r) => {
-          const dateStr = formatDate(r["날짜"]);
-          if (dateStr) {
-              if (!acc[dateStr]) acc[dateStr] = [];
-              acc[dateStr].push(r);
-          }
-          return acc;
-      }, {});
-
-      for (let i = 0; i < firstDay; i++) {
-          const prev = lastDatePrev - firstDay + i + 1;
-          const cell = document.createElement("div");
-          cell.className = "day-cell other-month";
-          cell.innerHTML = `<span class="day-number">${prev}</span>`;
-          grid.appendChild(cell);
-      }
-
+      const firstDay = new Date(year, month, 1).getDay(); const lastDate = new Date(year, month + 1, 0).getDate(); const lastDatePrev = new Date(year, month, 0).getDate();
+      const schedulesByDate = records.reduce((acc, r) => { const dateStr = formatDate(r["날짜"]); if (dateStr) { if (!acc[dateStr]) acc[dateStr] = []; acc[dateStr].push(r); } return acc; }, {});
+      for (let i = 0; i < firstDay; i++) { const prev = lastDatePrev - firstDay + i + 1; const cell = document.createElement("div"); cell.className = "day-cell other-month"; cell.innerHTML = `<span class="day-number">${prev}</span>`; grid.appendChild(cell); }
       for (let i = 1; i <= lastDate; i++) {
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-          const isToday = dateStr === TODAY_DATE_STR;
-          const isSelected = dateStr === selectedDate;
-          
-          const cell = document.createElement("div");
-          cell.className = `day-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`;
-          cell.onclick = () => {
-              selectedDate = dateStr;
-              renderCalendar(); 
-              updateDetailPanel(dateStr);
-          };
-          
+          const isToday = dateStr === TODAY_DATE_STR; const isSelected = dateStr === selectedDate;
+          const cell = document.createElement("div"); cell.className = `day-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`;
+          cell.onclick = () => { selectedDate = dateStr; renderCalendar(); updateDetailPanel(dateStr); };
           let html = `<span class="day-number">${i}</span>`;
           const list = schedulesByDate[dateStr];
           if(list && list.length > 0) {
-              let dotsHtml = '<div class="event-dots">';
-              const count = Math.min(list.length, 4);
-              for(let k=0; k<count; k++) {
-                  dotsHtml += `<div class="dot ${list.length > 4 ? 'many' : ''}"></div>`;
-              }
-              dotsHtml += '</div>';
-              html += dotsHtml;
+              let dotsHtml = '<div class="event-dots">'; const count = Math.min(list.length, 4);
+              for(let k=0; k<count; k++) { dotsHtml += `<div class="dot ${list.length > 4 ? 'many' : ''}"></div>`; }
+              dotsHtml += '</div>'; html += dotsHtml;
           }
-          cell.innerHTML = html;
-          grid.appendChild(cell);
+          cell.innerHTML = html; grid.appendChild(cell);
       }
-
-      const total = firstDay + lastDate;
-      const remain = 42 - total;
-      for (let i = 1; i <= remain; i++) {
-          const cell = document.createElement("div");
-          cell.className = "day-cell other-month";
-          cell.innerHTML = `<span class="day-number">${i}</span>`;
-          grid.appendChild(cell);
-      }
+      const total = firstDay + lastDate; const remain = 42 - total;
+      for (let i = 1; i <= remain; i++) { const cell = document.createElement("div"); cell.className = "day-cell other-month"; cell.innerHTML = `<span class="day-number">${i}</span>`; grid.appendChild(cell); }
   }
 
   function updateDetailPanel(dateStr) {
       document.getElementById('detailTitle').textContent = `${dateStr} 일정 목록`;
       const container = document.getElementById('detailListContainer');
-      
       const list = records.filter(r => formatDate(r["날짜"]) === dateStr);
-      
-      if(list.length === 0) {
-          container.innerHTML = `<div class="empty-state">📅 등록된 일정이 없습니다.<br>위 버튼을 눌러 일정을 추가하세요.</div>`;
-          return;
-      }
-      
+      if(list.length === 0) { container.innerHTML = `<div class="empty-state">📅 등록된 일정이 없습니다.<br>위 버튼을 눌러 일정을 추가하세요.</div>`; return; }
       container.innerHTML = "";
       list.forEach(r => {
-          const div = document.createElement("div");
-          div.className = "sch-item-card";
-          let html = `<div class="sch-team">${r['생산팀']}</div>`;
-          html += `<div class="sch-work">${r['작업내용']}</div>`;
-          html += `<div class="sch-meta">
-                      <span>👤 ${r['담당자']}</span>
-                      <span class="sch-divider">|</span>
-                      <span>📦 ${r['발주번호'] || '-'}</span>`;
-          if(r['허가번호']) {
-              html += `<span class="sch-divider">|</span><span style="color:#81D4FA">🛡️ ${r['허가번호']}</span>`;
-          }
-          html += `</div>`;
-          if(r['필수자재']) {
-              html += `<div class="sch-mat">🛠️ ${r['필수자재']}</div>`;
-          }
-          html += `<div class="sch-actions">
-                      <button onclick="openScheduleModal(${r.row})" style="padding:4px 8px; font-size:12px;">✏️</button>
-                   </div>`;
-          div.innerHTML = html;
-          container.appendChild(div);
+          const div = document.createElement("div"); div.className = "sch-item-card";
+          let html = `<div class="sch-team">${r['생산팀']}</div><div class="sch-work">${r['작업내용']}</div>`;
+          
+          // [수정] 발주번호가 있으면 클릭 가능하게 변경
+          let poHtml = r['발주번호'] ? `<span class="link-text" onclick="searchOrderByPO('${r['발주번호']}')">${r['발주번호']}</span>` : '-';
+          html += `<div class="sch-meta"><span>👤 ${r['담당자']}</span><span class="sch-divider">|</span><span>📦 ${poHtml}</span>`;
+          
+          if(r['허가번호']) { html += `<span class="sch-divider">|</span><span style="color:#81D4FA">🛡️ ${r['허가번호']}</span>`; } html += `</div>`;
+          if(r['필수자재']) { html += `<div class="sch-mat">🛠️ ${r['필수자재']}</div>`; }
+          html += `<div class="sch-actions"><button onclick="openScheduleModal(${r.row})" style="padding:4px 8px; font-size:12px;">✏️</button></div>`;
+          div.innerHTML = html; container.appendChild(div);
       });
   }
 
   async function loadSchedule(autoJumpToToday = false){
     try {
         const res = await fetch(API_URL+"?action=schedule_get"); const raw = await res.json();
+        // v5.2 구조 (8열)
         records = raw.slice(1).map((row,i) => { const o = {row: i+2}; FIELDS.forEach((k,idx) => o[k] = row[idx]??""); return o; });
         if (autoJumpToToday) {
             const view = getScheduleView(records); let todayIndex = view.findIndex(r => formatDate(r["날짜"]) === TODAY_DATE_STR);
             if (todayIndex !== -1) schedulePage = Math.floor(todayIndex / schedulePageSize) + 1;
             selectedDate = TODAY_DATE_STR;
         }
-        if(currentView === 'calendar') {
-             renderCalendar();
-             updateDetailPanel(selectedDate);
-        } else {
-             renderSchedule();
-        }
-    } catch(e) { console.error(e); alert("일정 데이터 로드 실패"); }
+        if(currentView === 'calendar') { renderCalendar(); updateDetailPanel(selectedDate); } else { renderSchedule(); }
+    } catch(e) { console.error(e); alert("일정 데이터 로드 실패. 시트의 B열(일정구분)을 삭제했는지 확인하세요."); }
   }
 
   function getScheduleView(data = records){
     let view = data.filter(r => {
       if(searchQuery){ const hay = FIELDS.map(k=>r[k]??"").join(" ").toLowerCase(); if(!hay.includes(searchQuery.toLowerCase())) return false; }
-      if(dateFilter.start || dateFilter.end){ const dStr = formatDate(r["날짜"]); if(!dStr) return false; if(dateFilter.start && dStr < dateFilter.start) return false; if(dateFilter.end && dStr > dateFilter.end) return false; }
-      return true;
+      if(dateFilter.start || dateFilter.end){ const dStr = formatDate(r["날짜"]); if(!dStr) return false; if(dateFilter.start && dStr < dateFilter.start) return false; if(dateFilter.end && dStr > dateFilter.end) return false; } return true;
     });
     view.sort((a,b)=>{
       let A=a[sortKey]??"", B=b[sortKey]??"";
@@ -861,12 +591,7 @@
   }
   
   function searchOrderByPO(po){ if(!po) return; switchTab('order'); document.getElementById('odSearch').value = po; document.getElementById('odSearch').dispatchEvent(new Event('input')); }
-  function searchScheduleByPO(po){
-      if(!po) return;
-      switchTab('schedule');
-      document.getElementById('searchBox').value = po;
-      document.getElementById('searchBox').dispatchEvent(new Event('input'));
-  }
+  function searchScheduleByPO(po){ if(!po) return; switchTab('schedule'); document.getElementById('searchBox').value = po; document.getElementById('searchBox').dispatchEvent(new Event('input')); }
 
   function openScheduleModal(row){
       currentSchRow = row; const rec = records.find(r => r.row === row); if(!rec) return;
@@ -901,415 +626,65 @@
     scheduleChartInstance = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: '작업 건수', data, backgroundColor: 'rgba(74, 144, 226, 0.6)' }] }, options: { maintainAspectRatio:false, scales:{y:{beginAtZero:true}} } });
   });
 
-  /* ================= 2. 전화번호부 ================= */
-  let pbPage=1, pageSizePhone=10, pbRowMap=new Map();
-  let pbAllData = []; 
-
-  async function loadPhonebook(){
-    const res = await fetch(API_URL+"?action=phone_get"); const rows = await res.json();
-    pbRowMap.clear(); 
-    pbAllData = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); 
-    pbAllData.forEach(it=>pbRowMap.set(it.row,it.cells));
-    
-    renderPhonebookTable();
-    renderAttendanceGrid();
-  }
-
+  /* ================= 나머지 기능들 (동일) ================= */
+  let pbPage=1, pageSizePhone=10, pbRowMap=new Map(), pbAllData = []; 
+  async function loadPhonebook(){ const res = await fetch(API_URL+"?action=phone_get"); const rows = await res.json(); pbRowMap.clear(); pbAllData = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); pbAllData.forEach(it=>pbRowMap.set(it.row,it.cells)); renderPhonebookTable(); renderAttendanceGrid(); }
   function renderPhonebookTable() {
-    const kw = (document.getElementById('pbSearch').value||"").toLowerCase();
-    const filtered = pbAllData.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
+    const kw = (document.getElementById('pbSearch').value||"").toLowerCase(); const filtered = pbAllData.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
     const totalPages = Math.ceil(filtered.length/pageSizePhone)||1; if(pbPage>totalPages) pbPage=1;
-    const start=(pbPage-1)*pageSizePhone, end=start+pageSizePhone;
-    const tb = document.querySelector("#pbTable tbody"); tb.innerHTML="";
-    filtered.slice(start,end).forEach(it=>{
-      const r = it.cells, tr = document.createElement("tr");
-      tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><button onclick='openPhoneModal(${it.row})'>✏️</button> <button onclick='deletePhone(${it.row})' class="btn-danger">🗑️</button></td>`;
-      tb.appendChild(tr);
-    });
-    renderPaginator("pbPagination",totalPages,(p)=>{pbPage=p;renderPhonebookTable();},pbPage);
+    const start=(pbPage-1)*pageSizePhone, end=start+pageSizePhone; const tb = document.querySelector("#pbTable tbody"); tb.innerHTML="";
+    filtered.slice(start,end).forEach(it=>{ const r = it.cells, tr = document.createElement("tr"); tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><button onclick='openPhoneModal(${it.row})'>✏️</button> <button onclick='deletePhone(${it.row})' class="btn-danger">🗑️</button></td>`; tb.appendChild(tr); }); renderPaginator("pbPagination",totalPages,(p)=>{pbPage=p;renderPhonebookTable();},pbPage);
   }
-
   function openPhoneModal(row){ currentPbRow = row; const old = pbRowMap.get(row)||["","","",""]; document.getElementById('m_pbDept').value = old[0]; document.getElementById('m_pbPos').value = old[1]; document.getElementById('m_pbName').value = old[2]; document.getElementById('m_pbPhone').value = old[3]; openModal('phoneModal'); }
   async function savePhoneFromModal(){ const dept=document.getElementById('m_pbDept').value, pos=document.getElementById('m_pbPos').value, name=document.getElementById('m_pbName').value, phone=document.getElementById('m_pbPhone').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_update",row:currentPbRow, dept,position:pos,name,phone})}); closeModal('phoneModal'); loadPhonebook(); }
   async function savePhonebook(){ const dept=document.getElementById('pbDept').value, pos=document.getElementById('pbPosition').value, name=document.getElementById('pbName').value, phone=document.getElementById('pbPhone').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_add",dept,position:pos,name,phone})}); document.getElementById('pbDept').value=""; document.getElementById('pbPosition').value=""; document.getElementById('pbName').value=""; document.getElementById('pbPhone').value=""; loadPhonebook(); }
   async function deletePhone(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"phone_delete",row})}); loadPhonebook(); } }
   document.getElementById("pbSearch").addEventListener("input",()=>{pbPage=1;renderPhonebookTable();});
 
-  /* ================= 2-1. 근태관리 ================= */
-  const attendanceState = {}; 
-
-  function startClock() {
-      setInterval(() => {
-          const now = new Date();
-          document.getElementById('liveClock').innerText = now.toLocaleTimeString('ko-KR');
-      }, 1000);
-  }
-
+  const attendanceState = {}; function startClock() { setInterval(() => { const now = new Date(); document.getElementById('liveClock').innerText = now.toLocaleTimeString('ko-KR'); }, 1000); }
   function renderAttendanceGrid() {
-      const container = document.getElementById('attendanceGrid');
-      container.innerHTML = "";
-      
+      const container = document.getElementById('attendanceGrid'); container.innerHTML = "";
       const targets = pbAllData.filter(it => (it.cells[0]||"").includes("영선"));
-      
-      if(targets.length === 0) {
-          container.innerHTML = "<div style='color:#aaa; width:100%; text-align:center;'>표시할 직원이 없습니다. (전화번호부 '영선' 부서)</div>";
-          return;
-      }
-
+      if(targets.length === 0) { container.innerHTML = "<div style='color:#aaa; width:100%; text-align:center;'>표시할 직원이 없습니다.</div>"; return; }
       targets.forEach(it => {
-          const name = it.cells[2];
-          const role = it.cells[1];
-          const status = attendanceState[name] || 'off';
-          
-          const div = document.createElement('div');
-          div.className = `emp-card ${status}`;
-          div.onclick = () => toggleAttendance(name);
-          
-          div.innerHTML = `
-              <div class="emp-name">${name}</div>
-              <div class="emp-role">${role}</div>
-              <span class="status-indicator">${status === 'working' ? '🟢 업무중' : '⚫ 미출근/퇴근'}</span>
-          `;
-          container.appendChild(div);
+          const name = it.cells[2], role = it.cells[1], status = attendanceState[name] || 'off';
+          const div = document.createElement('div'); div.className = `emp-card ${status}`; div.onclick = () => toggleAttendance(name);
+          div.innerHTML = `<div class="emp-name">${name}</div><div class="emp-role">${role}</div><span class="status-indicator">${status === 'working' ? '🟢 업무중' : '⚫ 미출근/퇴근'}</span>`; container.appendChild(div);
       });
   }
+  function toggleAttendance(name) { if (attendanceState[name] === 'working') { if(confirm(`${name}님, 퇴근 처리하시겠습니까?`)) attendanceState[name] = 'off'; } else { if(confirm(`${name}님, 출근 처리하시겠습니까?`)) attendanceState[name] = 'working'; } renderAttendanceGrid(); }
 
-  function toggleAttendance(name) {
-      if (attendanceState[name] === 'working') {
-          if(confirm(`${name}님, 퇴근 처리하시겠습니까?`)) {
-              attendanceState[name] = 'off';
-          }
-      } else {
-          if(confirm(`${name}님, 출근 처리하시겠습니까?`)) {
-              attendanceState[name] = 'working';
-          }
-      }
-      renderAttendanceGrid(); 
-  }
-
-
-  /* ================= 3. 버켓주기 ================= */
   let bkPage=1, pageSizeBucket=10, bkRowMap=new Map(), bkSortAsc=false;
   function getElapsedTime(dateStr) { const target = new Date(dateStr); const now = new Date(); if(isNaN(target)) return "-"; const diffDays = Math.ceil(Math.abs(now - target) / (1000 * 60 * 60 * 24)); return diffDays < 30 ? `${diffDays}일 전` : `${Math.floor(diffDays/30)}개월 전`; }
-  async function loadBucket(){
-    const res = await fetch(API_URL+"?action=bucket_get"); const rows = await res.json();
-    bkRowMap.clear(); 
-    const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); 
-    all.forEach(it=>bkRowMap.set(it.row,it.cells));
-    const kw = (document.getElementById('bkSearch').value||"").toLowerCase();
-    let filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw));
-    filtered.sort((a,b)=>{ const da=new Date(a.cells[1]), db=new Date(b.cells[1]); return !isNaN(da)&&!isNaN(db) ? (bkSortAsc?da-db:db-da) : 0; });
-    const totalPages = Math.ceil(filtered.length/pageSizeBucket)||1; if(bkPage>totalPages) bkPage=1;
-    const start=(bkPage-1)*pageSizeBucket, end=start+pageSizeBucket;
-    const tb = document.querySelector("#bkTable tbody"); tb.innerHTML="";
-    filtered.slice(start,end).forEach(it=>{
-      const r = it.cells, tr = document.createElement("tr");
-      tr.innerHTML=`<td>${r[0]}</td><td>${formatDate(r[1])}</td><td style="color:var(--accent-color)">${getElapsedTime(r[1])}</td><td>${r[2]}</td><td><button onclick='openBucketModal(${it.row})'>✏️</button> <button onclick='deleteBucket(${it.row})' class="btn-danger">🗑️</button></td>`;
-      tb.appendChild(tr);
-    });
-    renderPaginator("bkPagination",totalPages,(p)=>{bkPage=p;loadBucket();},bkPage);
-  }
-  function openBucketModal(row){ currentBkRow = row; const old = bkRowMap.get(row)||["","",""]; document.getElementById('m_bkDept').value = old[0]; document.getElementById('m_bkDate').value = formatDate(old[1]); document.getElementById('m_bkNote').value = old[2]; openModal('bucketModal'); }
+  async function loadBucket(){ const res = await fetch(API_URL+"?action=bucket_get"); const rows = await res.json(); bkRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>bkRowMap.set(it.row,it.cells)); const kw = (document.getElementById('bkSearch').value||"").toLowerCase(); let filtered = all.filter(it=>it.cells.join(" ").toLowerCase().includes(kw)); filtered.sort((a,b)=>{ const da=new Date(a.cells[1]), db=new Date(b.cells[1]); return !isNaN(da)&&!isNaN(db) ? (bkSortAsc?da-db:db-da) : 0; }); const totalPages = Math.ceil(filtered.length/pageSizeBucket)||1; if(bkPage>totalPages) bkPage=1; const start=(bkPage-1)*pageSizeBucket, end=start+pageSizeBucket; const tb = document.querySelector("#bkTable tbody"); tb.innerHTML=""; filtered.slice(start,end).forEach(it=>{ const r = it.cells, tr = document.createElement("tr"); tr.innerHTML=`<td>${r[0]}</td><td>${formatDate(r[1])}</td><td style="color:var(--accent-color)">${getElapsedTime(r[1])}</td><td>${r[2]}</td><td><button onclick='openBucketModal(${it.row})'>✏️</button> <button onclick='deleteBucket(${it.row})' class="btn-danger">🗑️</button></td>`; tb.appendChild(tr); }); renderPaginator("bkPagination",totalPages,(p)=>{bkPage=p;loadBucket();},bkPage); }
+  function openBucketModal(row){ currentBkRow = row; const old = bkRowMap.get(row)||["","","",""]; document.getElementById('m_bkDept').value = old[0]; document.getElementById('m_bkDate').value = formatDate(old[1]); document.getElementById('m_bkNote').value = old[2]; openModal('bucketModal'); }
   async function saveBucketFromModal(){ const dept=document.getElementById('m_bkDept').value, date=document.getElementById('m_bkDate').value, note=document.getElementById('m_bkNote').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_update",row:currentBkRow, dept,date,note})}); closeModal('bucketModal'); loadBucket(); }
   async function saveBucket(){ const dept=document.getElementById('bkDept').value, date=document.getElementById('bkDate').value, note=document.getElementById('bkNote').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_add",dept,date,note})}); document.getElementById('bkDept').value=""; document.getElementById('bkDate').value=""; document.getElementById('bkNote').value=""; loadBucket(); }
   async function deleteBucket(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"bucket_delete",row})}); loadBucket(); } }
-  document.getElementById("bkSearch").addEventListener("input",()=>{bkPage=1;loadBucket();});
-  document.getElementById("bkAscBtn").addEventListener("click",()=>{ bkSortAsc=true; bkPage=1; loadBucket(); });
-  document.getElementById("bkDescBtn").addEventListener("click",()=>{ bkSortAsc=false; bkPage=1; loadBucket(); });
+  document.getElementById("bkSearch").addEventListener("input",()=>{bkPage=1;loadBucket();}); document.getElementById("bkAscBtn").addEventListener("click",()=>{ bkSortAsc=true; bkPage=1; loadBucket(); }); document.getElementById("bkDescBtn").addEventListener("click",()=>{ bkSortAsc=false; bkPage=1; loadBucket(); });
 
-  /* ================= 4. 설비관리 ================= */
-  let esPage=1, pageSizeSpec=5, esRowMap=new Map(), currentSpecRow = null; 
-  let esAllData = []; 
-  
-  // [수정] 누락되었던 defaultSpecs 정의 복구
-  const defaultSpecs = ["크레인 종류", "양정", "정격 속도", "모터", "감속기", "레일", "와이어로프"];
-
-  async function loadEquipmentSpec(){
-    const res = await fetch(API_URL+"?action=spec_get"); const rows = await res.json();
-    esRowMap.clear(); 
-    esAllData = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); 
-    esAllData.forEach(it=>esRowMap.set(it.row,it.cells));
-    
-    initTeamFilter();
-    renderEquipmentTable();
-  }
-
-  function initTeamFilter() {
-      const teams = new Set();
-      esAllData.forEach(it => {
-          if(it.cells[0]) teams.add(it.cells[0]);
-      });
-      const teamSel = document.getElementById('filterTeam');
-      while(teamSel.options.length > 1) teamSel.remove(1);
-      Array.from(teams).sort().forEach(t => {
-          const opt = document.createElement('option'); opt.value = t; opt.textContent = t; teamSel.appendChild(opt);
-      });
-  }
-
-  function updateLocationOptions() {
-      const selectedTeam = document.getElementById('filterTeam').value;
-      const locSel = document.getElementById('filterLoc');
-      let sourceData = esAllData;
-      if (selectedTeam) {
-          sourceData = esAllData.filter(it => it.cells[0] === selectedTeam);
-      }
-      const locs = new Set();
-      sourceData.forEach(it => {
-          if(it.cells[2]) locs.add(it.cells[2]);
-      });
-      locSel.innerHTML = '<option value="">📍 모든 위치 보기</option>';
-      Array.from(locs).sort().forEach(l => {
-          const opt = document.createElement('option'); 
-          opt.value = l; 
-          opt.textContent = l; 
-          locSel.appendChild(opt);
-      });
-  }
-
-  function renderEquipmentTable() {
-      const teamFilter = document.getElementById('filterTeam').value;
-      const locFilter = document.getElementById('filterLoc').value;
-      const keyword = (document.getElementById('esSearch').value || "").toLowerCase();
-      
-      let filtered = esAllData.filter(it => {
-          const r = it.cells;
-          if (teamFilter && r[0] !== teamFilter) return false;
-          if (locFilter && r[2] !== locFilter) return false;
-          if (keyword) {
-              const hay = r.join(" ").toLowerCase(); 
-              if (!hay.includes(keyword)) return false;
-          }
-          return true;
-      });
-
-      const totalPages = Math.ceil(filtered.length/pageSizeSpec)||1; 
-      if(esPage > totalPages) esPage=1;
-      const start=(esPage-1)*pageSizeSpec, end=start+pageSizeSpec;
-      const tb = document.querySelector("#esTable tbody"); 
-      tb.innerHTML="";
-      
-      if(filtered.length === 0) {
-          tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px;">조건에 맞는 설비가 없습니다.</td></tr>`;
-          document.getElementById("esPagination").innerHTML="";
-          return;
-      }
-
-      filtered.slice(start,end).forEach(it=>{
-        const r=it.cells, tr=document.createElement("tr");
-        let specDisplay = "없음";
-        try { 
-            const parsed = JSON.parse(r[3]); 
-            if(Object.keys(parsed).length > 0) {
-                specDisplay = Object.entries(parsed).map(([k,v]) => 
-                    `<div style="padding:4px 0; border-bottom:1px solid #333; display:flex; align-items:center;">
-                        <span style="color:#81D4FA; font-weight:600; min-width:80px; margin-right:8px;">${k}</span>
-                        <span style="color:#ffffff;">${v}</span>
-                     </div>`
-                ).join(""); 
-            }
-        } catch {}
-        tr.innerHTML=`<td>${r[0]}</td><td style="font-weight:bold; color:var(--primary-color);">${r[1]}</td><td>${r[2]||'-'}</td><td style="font-size:0.9em; line-height:1.4;">${specDisplay}</td><td><button onclick='openSpecModal("edit", ${it.row})'>📝 상세/수정</button> <button onclick='deleteEquipmentSpec(${it.row})' class="btn-danger">🗑️</button></td>`;
-        tb.appendChild(tr);
-      });
-      renderPaginator("esPagination",totalPages,(p)=>{esPage=p;renderEquipmentTable();},esPage);
-  }
-
-  function resetEquipmentFilter() {
-      document.getElementById('filterTeam').value = "";
-      document.getElementById('filterLoc').value = ""; 
-      updateLocationOptions(); 
-      document.getElementById('esSearch').value = "";
-      esPage = 1;
-      renderEquipmentTable();
-  }
-
-  document.getElementById('filterTeam').addEventListener('change', () => { 
-      updateLocationOptions(); 
-      esPage=1; 
-      renderEquipmentTable(); 
-  });
-  document.getElementById('filterLoc').addEventListener('change', () => { esPage=1; renderEquipmentTable(); });
-  document.getElementById("esSearch").addEventListener("input", () => { esPage=1; renderEquipmentTable(); });
-
-  function openSpecModal(mode, row = null) {
-      const tbody = document.querySelector("#modalSpecTable tbody"); tbody.innerHTML = ""; const metaInfo = document.getElementById("modalMetaInfo");
-      try {
-          if (mode === 'new') { 
-              const team=document.getElementById('esTeam').value;
-              const id=document.getElementById('esEqId').value;
-              
-              if(!team || !id) { alert("팀과 ID를 먼저 입력해주세요."); return; } 
-              
-              currentSpecRow=null; 
-              metaInfo.textContent=`신규: [${team}] ${id}`; 
-              defaultSpecs.forEach(k => addModalRow(k, "")); 
-          } 
-          else { 
-              currentSpecRow = row; 
-              const data = esRowMap.get(row); 
-              metaInfo.textContent = `수정: [${data[0]}] ${data[1]}`; 
-              try { 
-                  const json = JSON.parse(data[3]); 
-                  Object.entries(json).forEach(([k,v])=>addModalRow(k,v)); 
-              } catch { 
-                  defaultSpecs.forEach(k => addModalRow(k, "")); 
-              } 
-          }
-          openModal('specModal');
-      } catch (e) {
-          console.error(e);
-          alert("오류가 발생했습니다. 관리자에게 문의하세요.");
-      }
-  }
+  let esPage=1, pageSizeSpec=5, esRowMap=new Map(), currentSpecRow = null, esAllData = []; const defaultSpecs = ["크레인 종류", "양정", "정격 속도", "모터", "감속기", "레일", "와이어로프"];
+  async function loadEquipmentSpec(){ const res = await fetch(API_URL+"?action=spec_get"); const rows = await res.json(); esRowMap.clear(); esAllData = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); esAllData.forEach(it=>esRowMap.set(it.row,it.cells)); initTeamFilter(); renderEquipmentTable(); }
+  function initTeamFilter() { const teams = new Set(); esAllData.forEach(it => { if(it.cells[0]) teams.add(it.cells[0]); }); const teamSel = document.getElementById('filterTeam'); while(teamSel.options.length > 1) teamSel.remove(1); Array.from(teams).sort().forEach(t => { const opt = document.createElement('option'); opt.value = t; opt.textContent = t; teamSel.appendChild(opt); }); }
+  function updateLocationOptions() { const selectedTeam = document.getElementById('filterTeam').value, locSel = document.getElementById('filterLoc'); let sourceData = esAllData; if (selectedTeam) sourceData = esAllData.filter(it => it.cells[0] === selectedTeam); const locs = new Set(); sourceData.forEach(it => { if(it.cells[2]) locs.add(it.cells[2]); }); locSel.innerHTML = '<option value="">📍 모든 위치 보기</option>'; Array.from(locs).sort().forEach(l => { const opt = document.createElement('option'); opt.value = l; opt.textContent = l; locSel.appendChild(opt); }); }
+  function renderEquipmentTable() { const teamFilter = document.getElementById('filterTeam').value, locFilter = document.getElementById('filterLoc').value, keyword = (document.getElementById('esSearch').value || "").toLowerCase(); let filtered = esAllData.filter(it => { const r = it.cells; if (teamFilter && r[0] !== teamFilter) return false; if (locFilter && r[2] !== locFilter) return false; if (keyword) { const hay = r.join(" ").toLowerCase(); if (!hay.includes(keyword)) return false; } return true; }); const totalPages = Math.ceil(filtered.length/pageSizeSpec)||1; if(esPage > totalPages) esPage=1; const start=(esPage-1)*pageSizeSpec, end=start+pageSizeSpec; const tb = document.querySelector("#esTable tbody"); tb.innerHTML=""; if(filtered.length === 0) { tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px;">조건에 맞는 설비가 없습니다.</td></tr>`; document.getElementById("esPagination").innerHTML=""; return; } filtered.slice(start,end).forEach(it=>{ const r=it.cells, tr=document.createElement("tr"); let specDisplay = "없음"; try { const parsed = JSON.parse(r[3]); if(Object.keys(parsed).length > 0) specDisplay = Object.entries(parsed).map(([k,v]) => `<div style="padding:4px 0; border-bottom:1px solid #333; display:flex; align-items:center;"><span style="color:#81D4FA; font-weight:600; min-width:80px; margin-right:8px;">${k}</span><span style="color:#ffffff;">${v}</span></div>`).join(""); } catch {} tr.innerHTML=`<td>${r[0]}</td><td style="font-weight:bold; color:var(--primary-color);">${r[1]}</td><td>${r[2]||'-'}</td><td style="font-size:0.9em; line-height:1.4;">${specDisplay}</td><td><button onclick='openSpecModal("edit", ${it.row})'>📝 상세/수정</button> <button onclick='deleteEquipmentSpec(${it.row})' class="btn-danger">🗑️</button></td>`; tb.appendChild(tr); }); renderPaginator("esPagination",totalPages,(p)=>{esPage=p;renderEquipmentTable();},esPage); }
+  function resetEquipmentFilter() { document.getElementById('filterTeam').value = ""; document.getElementById('filterLoc').value = ""; updateLocationOptions(); document.getElementById('esSearch').value = ""; esPage = 1; renderEquipmentTable(); }
+  document.getElementById('filterTeam').addEventListener('change', () => { updateLocationOptions(); esPage=1; renderEquipmentTable(); }); document.getElementById('filterLoc').addEventListener('change', () => { esPage=1; renderEquipmentTable(); }); document.getElementById("esSearch").addEventListener("input", () => { esPage=1; renderEquipmentTable(); });
+  function openSpecModal(mode, row = null) { const tbody = document.querySelector("#modalSpecTable tbody"); tbody.innerHTML = ""; const metaInfo = document.getElementById("modalMetaInfo"); if (mode === 'new') { const team=document.getElementById('esTeam').value, id=document.getElementById('esEqId').value; if(!team || !id) { alert("팀과 ID를 먼저 입력해주세요."); return; } currentSpecRow=null; metaInfo.textContent=`신규: [${team}] ${id}`; defaultSpecs.forEach(k => addModalRow(k, "")); } else { currentSpecRow = row; const data = esRowMap.get(row); metaInfo.textContent = `수정: [${data[0]}] ${data[1]}`; try { const json = JSON.parse(data[3]); Object.entries(json).forEach(([k,v])=>addModalRow(k,v)); } catch { defaultSpecs.forEach(k => addModalRow(k, "")); } } openModal('specModal'); }
   function addModalRow(key="", value="") { const tbody = document.querySelector("#modalSpecTable tbody"); const tr = document.createElement("tr"); tr.innerHTML = `<td><input type="text" value="${key}" style="width:95%"></td><td><input type="text" value="${value}" style="width:95%"></td><td style="text-align:center;"><button onclick="this.closest('tr').remove()" class="btn-danger">x</button></td>`; tbody.appendChild(tr); }
-  async function saveSpecFromModal() {
-      const rows = document.querySelectorAll("#modalSpecTable tbody tr"); const newSpec = {}; rows.forEach(tr => { const inputs = tr.querySelectorAll("input"); if(inputs[0].value) newSpec[inputs[0].value] = inputs[1].value; }); const specStr = JSON.stringify(newSpec);
-      if (currentSpecRow === null) { const team=document.getElementById('esTeam').value, eqId=document.getElementById('esEqId').value, location=document.getElementById('esLocation').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_add", team, eqId, location, spec: specStr})}); document.getElementById('esTeam').value=""; document.getElementById('esEqId').value=""; document.getElementById('esLocation').value=""; } 
-      else { const old = esRowMap.get(currentSpecRow); await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_update", row: currentSpecRow, team: old[0], eqId: old[1], location: old[2], spec: specStr})}); }
-      closeModal('specModal'); alert("저장됨"); loadEquipmentSpec();
-  }
+  async function saveSpecFromModal() { const rows = document.querySelectorAll("#modalSpecTable tbody tr"); const newSpec = {}; rows.forEach(tr => { const inputs = tr.querySelectorAll("input"); if(inputs[0].value) newSpec[inputs[0].value] = inputs[1].value; }); const specStr = JSON.stringify(newSpec); if (currentSpecRow === null) { const team=document.getElementById('esTeam').value, eqId=document.getElementById('esEqId').value, location=document.getElementById('esLocation').value; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_add", team, eqId, location, spec: specStr})}); document.getElementById('esTeam').value=""; document.getElementById('esEqId').value=""; document.getElementById('esLocation').value=""; } else { const old = esRowMap.get(currentSpecRow); await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_update", row: currentSpecRow, team: old[0], eqId: old[1], location: old[2], spec: specStr})}); } closeModal('specModal'); alert("저장됨"); loadEquipmentSpec(); }
   async function deleteEquipmentSpec(row){ if(confirm("삭제?")) { await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"spec_delete",row})}); loadEquipmentSpec(); } }
 
-  /* ================= 5. 발주정보 (Force Sync) ================= */
   let odPage=1, pageSizeOrder=10, odRowMap=new Map(), odSortAsc=false;
-  
-  function normalizeBool(val) {
-      if (val === true || val === false) return val;
-      if (!val) return false;
-      const str = String(val).trim().toUpperCase();
-      return str === 'TRUE' || str === '허가' || str === '완료';
-  }
-
-  async function fetchOrderData() {
-      try {
-          const res = await fetch(API_URL+"?action=order_get");
-          const rows = await res.json();
-          odRowMap.clear();
-          const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r}));
-          all.forEach(it=>odRowMap.set(it.row, it.cells));
-          loadOrder(); 
-      } catch(e) {
-          console.error(e);
-      }
-  }
-
-  function loadOrder() {
-      const kw = (document.getElementById('odSearch').value||"").toLowerCase();
-      const all = Array.from(odRowMap.entries()).map(([k,v]) => ({row:k, cells:v}));
-      
-      const filtered = all.filter(it => it.cells.join(" ").toLowerCase().includes(kw));
-      filtered.sort((a,b) => odSortAsc ? a.row-b.row : b.row-a.row);
-      
-      const totalPages = Math.ceil(filtered.length/pageSizeOrder)||1;
-      if(odPage > totalPages) odPage = 1;
-      
-      const start = (odPage-1)*pageSizeOrder, end = start+pageSizeOrder;
-      const tb = document.querySelector("#odTable tbody");
-      tb.innerHTML = "";
-      
-      filtered.slice(start,end).forEach(it => {
-          const r = it.cells;
-          let isPermit = normalizeBool(r[19]);
-          let isDone = normalizeBool(r[20]);
-
-          let permitClass = isPermit ? "status-badge permit-active" : "status-badge";
-          let doneClass = isDone ? "status-badge done-active" : "status-badge";
-
-          const tr = document.createElement("tr");
-          tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td>
-                        <td><span class="link-text" onclick="searchScheduleByPO('${r[2]}')">${r[2]}</span></td>
-                        <td>${r[3]}</td><td>${r[4]}</td>
-                        <td><span class="ellipsis-cell" title="${r[5]}">${r[5]}</span></td>
-                        <td><span class="ellipsis-cell" title="${r[6]}">${r[6]}</span></td>
-                        <td style="text-align:center;">
-                            <span class="${permitClass}" onclick="toggleStatus(${it.row}, 'permit', ${!isPermit})">허가발행</span>
-                            <span class="${doneClass}" onclick="toggleStatus(${it.row}, 'done', ${!isDone})">작업완료</span>
-                        </td>
-                        <td><button onclick='openOrderModal(${it.row})'>✏️</button> <button onclick='deleteOrder(${it.row})' class="btn-danger">🗑️</button></td>`;
-          tb.appendChild(tr);
-      });
-      renderPaginator("odPagination", totalPages, (p)=>{odPage=p; loadOrder();}, odPage);
-  }
-
-  async function toggleStatus(row, type, newValue) {
-      const old = odRowMap.get(row);
-      if(old) {
-          const strVal = newValue ? "TRUE" : "FALSE";
-          if(type === 'permit') old[19] = strVal;
-          else old[20] = strVal;
-          
-          loadOrder(); 
-          
-          try {
-              const res = await fetch(API_URL, {
-                  method: "POST",
-                  body: JSON.stringify({
-                      action: "order_toggle",
-                      row: row,
-                      type: type,
-                      value: strVal
-                  })
-              });
-              const json = await res.json();
-              if(json.result === 'error') alert("스크립트 버전이 맞지 않습니다. URL을 확인해주세요.");
-          } catch (e) { console.error("저장 실패", e); }
-      }
-  }
-
-  function openOrderModal(row){
-      currentOdRow = row; 
-      const old = odRowMap.get(row) || Array(21).fill(""); 
-      document.getElementById('m_odBid').value = old[0]; document.getElementById('m_odReq').value = old[1];
-      document.getElementById('m_odPo').value = old[2]; document.getElementById('m_odRequester').value = old[3];
-      document.getElementById('m_odBuyer').value = old[4]; document.getElementById('m_odProject').value = old[5];
-      document.getElementById('m_odPermit').value = old[6]; 
-      
-      document.getElementById('m_odPermitCheck').checked = normalizeBool(old[19]);
-      document.getElementById('m_odDoneCheck').checked = normalizeBool(old[20]);
-      
-      openModal('orderModal');
-  }
-
-  async function saveOrderFromModal(){
-      const bid=document.getElementById('m_odBid').value, req=document.getElementById('m_odReq').value;
-      const po=document.getElementById('m_odPo').value, requester=document.getElementById('m_odRequester').value;
-      const buyer=document.getElementById('m_odBuyer').value, project=document.getElementById('m_odProject').value;
-      const permit=document.getElementById('m_odPermit').value;
-      
-      const permitYN = document.getElementById('m_odPermitCheck').checked ? "TRUE" : "FALSE";
-      const doneYN = document.getElementById('m_odDoneCheck').checked ? "TRUE" : "FALSE";
-
-      await fetch(API_URL,{method:"POST",body:JSON.stringify({
-          action:"order_update", row: currentOdRow, 
-          bid, req, po, requester, buyer, project, permit,
-          permitYN, doneYN
-      })});
-      closeModal('orderModal'); fetchOrderData(); 
-  }
-
-  async function saveOrder(){
-      const bid=document.getElementById('odBid').value, req=document.getElementById('odReq').value;
-      const po=document.getElementById('odPo').value, requester=document.getElementById('odRequester').value;
-      const buyer=document.getElementById('odBuyer').value, project=document.getElementById('odProject').value;
-      const permit=document.getElementById('odPermit').value;
-      
-      // 체크박스가 삭제되었으므로, 신규 등록 시 무조건 '미발행/미완료' 처리
-      const permitYN = "FALSE";
-      const doneYN = "FALSE";
-
-      await fetch(API_URL,{method:"POST",body:JSON.stringify({
-          action:"order_add", bid, req, po, requester, buyer, project, permit,
-          permitYN, doneYN
-      })});
-      
-      [odBid,odReq,odPo,odRequester,odBuyer,odProject,odPermit].forEach(el=>el.value="");
-      fetchOrderData();
-  }
-
+  function normalizeBool(val) { if (val === true || val === false) return val; if (!val) return false; const str = String(val).trim().toUpperCase(); return str === 'TRUE' || str === '허가' || str === '완료'; }
+  async function fetchOrderData() { try { const res = await fetch(API_URL+"?action=order_get"); const rows = await res.json(); odRowMap.clear(); const all = rows.slice(1).map((r,i)=>({row:i+2, cells:r})); all.forEach(it=>odRowMap.set(it.row, it.cells)); loadOrder(); } catch(e) { console.error(e); } }
+  function loadOrder() { const kw = (document.getElementById('odSearch').value||"").toLowerCase(); const all = Array.from(odRowMap.entries()).map(([k,v]) => ({row:k, cells:v})); const filtered = all.filter(it => it.cells.join(" ").toLowerCase().includes(kw)); filtered.sort((a,b) => odSortAsc ? a.row-b.row : b.row-a.row); const totalPages = Math.ceil(filtered.length/pageSizeOrder)||1; if(odPage > totalPages) odPage = 1; const start = (odPage-1)*pageSizeOrder, end = start+pageSizeOrder; const tb = document.querySelector("#odTable tbody"); tb.innerHTML = ""; filtered.slice(start,end).forEach(it => { const r = it.cells; let isPermit = normalizeBool(r[19]), isDone = normalizeBool(r[20]); let permitClass = isPermit ? "status-badge permit-active" : "status-badge", doneClass = isDone ? "status-badge done-active" : "status-badge"; const tr = document.createElement("tr"); tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td><span class="link-text" onclick="searchScheduleByPO('${r[2]}')">${r[2]}</span></td><td>${r[3]}</td><td>${r[4]}</td><td><span class="ellipsis-cell" title="${r[5]}">${r[5]}</span></td><td><span class="ellipsis-cell" title="${r[6]}">${r[6]}</span></td><td style="text-align:center;"><span class="${permitClass}" onclick="toggleStatus(${it.row}, 'permit', ${!isPermit})">허가발행</span> <span class="${doneClass}" onclick="toggleStatus(${it.row}, 'done', ${!isDone})">작업완료</span></td><td><button onclick='openOrderModal(${it.row})'>✏️</button> <button onclick='deleteOrder(${it.row})' class="btn-danger">🗑️</button></td>`; tb.appendChild(tr); }); renderPaginator("odPagination", totalPages, (p)=>{odPage=p; loadOrder();}, odPage); }
+  async function toggleStatus(row, type, newValue) { const old = odRowMap.get(row); if(old) { const strVal = newValue ? "TRUE" : "FALSE"; if(type === 'permit') old[19] = strVal; else old[20] = strVal; loadOrder(); try { await fetch(API_URL, {method: "POST", body: JSON.stringify({action: "order_toggle", row: row, type: type, value: strVal})}); } catch (e) { console.error("저장 실패", e); } } }
+  function openOrderModal(row){ currentOdRow = row; const old = odRowMap.get(row) || Array(21).fill(""); document.getElementById('m_odBid').value = old[0]; document.getElementById('m_odReq').value = old[1]; document.getElementById('m_odPo').value = old[2]; document.getElementById('m_odRequester').value = old[3]; document.getElementById('m_odBuyer').value = old[4]; document.getElementById('m_odProject').value = old[5]; document.getElementById('m_odPermit').value = old[6]; document.getElementById('m_odPermitCheck').checked = normalizeBool(old[19]); document.getElementById('m_odDoneCheck').checked = normalizeBool(old[20]); openModal('orderModal'); }
+  async function saveOrderFromModal(){ const bid=document.getElementById('m_odBid').value, req=document.getElementById('m_odReq').value, po=document.getElementById('m_odPo').value, requester=document.getElementById('m_odRequester').value, buyer=document.getElementById('m_odBuyer').value, project=document.getElementById('m_odProject').value, permit=document.getElementById('m_odPermit').value; const permitYN = document.getElementById('m_odPermitCheck').checked ? "TRUE" : "FALSE", doneYN = document.getElementById('m_odDoneCheck').checked ? "TRUE" : "FALSE"; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"order_update", row: currentOdRow, bid, req, po, requester, buyer, project, permit, permitYN, doneYN})}); closeModal('orderModal'); fetchOrderData(); }
+  async function saveOrder(){ const bid=document.getElementById('odBid').value, req=document.getElementById('odReq').value, po=document.getElementById('odPo').value, requester=document.getElementById('odRequester').value, buyer=document.getElementById('odBuyer').value, project=document.getElementById('odProject').value, permit=document.getElementById('odPermit').value; const permitYN = "FALSE", doneYN = "FALSE"; await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"order_add", bid, req, po, requester, buyer, project, permit, permitYN, doneYN})}); [odBid,odReq,odPo,odRequester,odBuyer,odProject,odPermit].forEach(el=>el.value=""); fetchOrderData(); }
   async function deleteOrder(row){ if(confirm("삭제?")){ await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"order_delete",row})}); fetchOrderData(); } }
-  document.getElementById("odSearch").addEventListener("input",()=>{odPage=1;loadOrder();});
-  document.getElementById("odAscBtn").addEventListener("click",()=>{ odSortAsc=true; odPage=1; loadOrder(); });
-  document.getElementById("odDescBtn").addEventListener("click",()=>{ odSortAsc=false; odPage=1; loadOrder(); });
+  document.getElementById("odSearch").addEventListener("input",()=>{odPage=1;loadOrder();}); document.getElementById("odAscBtn").addEventListener("click",()=>{ odSortAsc=true; odPage=1; loadOrder(); }); document.getElementById("odDescBtn").addEventListener("click",()=>{ odSortAsc=false; odPage=1; loadOrder(); });
 
   /* Init */
   toggleScheduleView('calendar'); 
@@ -1317,3 +692,4 @@
 </script>
 </body>
 </html>
+
